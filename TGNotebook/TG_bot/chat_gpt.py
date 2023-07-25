@@ -8,9 +8,9 @@ from langchain.prompts import PromptTemplate
 import pathlib
 import subprocess
 import tempfile
-import ipywidgets as widgets
+# import ipywidgets as widgets
 import os
-import gspread
+# import gspread
 import re
 import warnings
 warnings.filterwarnings("ignore")
