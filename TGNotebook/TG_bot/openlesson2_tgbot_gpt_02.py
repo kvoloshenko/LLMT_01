@@ -20,6 +20,11 @@ load_dotenv()
 
 # загружаем токен бота
 TOKEN = os.environ.get("TOKEN")
+print (f'TOKEN = {TOKEN}')
+SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
+print (f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
+KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
+print (f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
 def tg_gpt_01(t_system,t_user):
   print(f't_system={t_system}')
@@ -36,8 +41,10 @@ def tg_gpt_01(t_system,t_user):
   return message
 
 def tg_gpt_02 (topic):
-  system_doc_url = 'https://docs.google.com/document/d/1eG-WfEiwyJZIZPgi-GK7-Q9ueO1FNcgfvFjsAf99N6g'        # промпт
-  knowledge_base_url = 'https://docs.google.com/document/d/1uKznFpg5uDuSd65QUMEcuyxB1NfrKqk93BOoG0wwYQg'    # база знаний
+  # system_doc_url = 'https://docs.google.com/document/d/1eG-WfEiwyJZIZPgi-GK7-Q9ueO1FNcgfvFjsAf99N6g'        # промпт
+  # knowledge_base_url = 'https://docs.google.com/document/d/1uKznFpg5uDuSd65QUMEcuyxB1NfrKqk93BOoG0wwYQg'    # база знаний
+  system_doc_url = SYSTEM_DOC_URL
+  knowledge_base_url = KNOWLEDGE_BASE_URL
   # topic= "сколько времени нужно будет уделять учебе, чтобы освоить всю программу?"
   ans = chat_gpt.answer_user_question(system_doc_url, knowledge_base_url, topic)
   return ans
