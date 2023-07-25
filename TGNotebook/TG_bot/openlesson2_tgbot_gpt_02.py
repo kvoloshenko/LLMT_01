@@ -61,7 +61,7 @@ async def text(update, context):
     print(f'id message: {update.message.message_id}')
     print(f'name: {update.message.from_user.first_name}')
     print(f'user.id: {update.message.from_user.id}')
-    print('-------------------')
+    # print('-------------------')
 
     t_system = 'Ты - Эксперт по продвижению товаров в телеграм'
     # t_user = 'Как правильно писать продающие посты в телеграм?'
@@ -72,6 +72,8 @@ async def text(update, context):
 
     # my_message = await update.message.reply_text(f'Получено текстовое сообщение: {update.message.text}')
     my_message = await update.message.reply_text(f'Получено ответ от ChatGPT:\n {gm}')
+    print(f'answer: {gm}')
+    print('-------------------')
 
     # использованеи context
 
