@@ -78,7 +78,7 @@ async def text(update, context):
     gm = tg_gpt_02(topic)
 
     # my_message = await update.message.reply_text(f'Получено текстовое сообщение: {update.message.text}')
-    my_message = await update.message.reply_text(f'Получено ответ от ChatGPT:\n {gm}')
+    my_message = await update.message.reply_text(f'{gm}')
     print(f'answer: {gm}')
     print('-------------------')
 
