@@ -18,7 +18,7 @@ import chat_gpt
 # возьмем переменные окружения из .env
 load_dotenv()
 
-# загружаем токен бота
+# загружаем значеняи из файла .env
 TOKEN = os.environ.get("TOKEN")
 print (f'TOKEN = {TOKEN}')
 SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
@@ -61,7 +61,7 @@ async def start(update, context):
 async def text(update, context):
 
     # использование update
-    print(update)
+    # print(update)
     print('-------------------')
     print(f'text: {update.message.text}')
     print(f'date: {update.message.date}')

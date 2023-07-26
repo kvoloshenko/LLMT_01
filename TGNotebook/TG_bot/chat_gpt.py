@@ -26,9 +26,12 @@ from dotenv import load_dotenv
 #api_key = getpass('Введите ваш ключ API:')
 # возьмем переменные окружения из .env
 load_dotenv()
-# загружаем OPEN AI API_KEY
+# загружаем значеняи из файла .env
 api_key = os.environ.get("API_KEY")
-
+verbose = os.environ.get("VERBOSE")
+print(f'verbose={verbose}')
+temperature = float(os.environ.get("TEMPERATURE"))
+print(f'temperature={temperature}')
 
 openai.api_key = api_key
 def load_document_text(url: str) -> str:
@@ -65,6 +68,9 @@ def create_embedding(data):
     search_index = Chroma.from_documents(source_chunks, OpenAIEmbeddings(openai_api_key=api_key), )
 
     count_token = num_tokens_from_string(' '.join([x.page_content for x in source_chunks]), "cl100k_base")
+    print('\n ===========================================: ')
+    print('Количество токенов в документе :', count_token)
+    print('ЦЕНА запроса:', 0.0001*(count_token/1000), ' $')
 
     return search_index
 
@@ -116,7 +122,7 @@ def insert_newlines(text: str, max_len: int = 170) -> str:
     return " ".join(lines)
 
 
-def answer_index(system, topic, search_index, temp=1, verbose=0):
+def answer_index(system, topic, search_index, temp=1, verbose = 0):
 
     # Selecting documents similar to the question
     docs = search_index.similarity_search(topic, k=5)
@@ -159,5 +165,5 @@ def answer_user_question(system_doc: str, knowledge_base_url: str, user_question
     answer_text = answer_index(system_doc_text, input_text, knowledge_base_index, temp=temperature, verbose=verbose)
 
     return answer_text
-temperature=0.5
-verbose=0
+# temperature=0.5
+# verbose=1
