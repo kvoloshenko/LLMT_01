@@ -27,6 +27,8 @@ from dotenv import load_dotenv
 # возьмем переменные окружения из .env
 load_dotenv()
 # загружаем значеняи из файла .env
+ll_model = os.environ.get("LL_MODEL")
+print(f'll_model={ll_model}')
 api_key = os.environ.get("API_KEY")
 verbose = os.environ.get("VERBOSE")
 print(f'verbose={verbose}')
@@ -81,19 +83,21 @@ def answer(system, topic, temp = 1):
       ]
 
     completion = openai.ChatCompletion.create(
-      model="gpt-3.5-gpt-3.5-turbo-0613",
+      # model="gpt-3.5-gpt-3.5-turbo-0613",
+      model = ll_model,
       messages=messages,
       temperature=temp
       )
 
     return completion.choices[0].message.content
 
-def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0613"):
-
+# def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0613"):
+def num_tokens_from_messages(messages, model=ll_model):
     try:
         encoding = tiktoken.encoding_for_model(model)
     except KeyError:
         encoding = tiktoken.get_encoding("cl100k_base")
+    # TODO Нужно ли это условие?
     if model == "gpt-3.5-turbo-0613":
         num_tokens = 0
         for message in messages:
@@ -136,10 +140,11 @@ def answer_index(system, topic, search_index, temp=1, verbose = 0):
     ]
 
     if verbose: print('\n ===========================================: ')
-    if verbose: print(f"{num_tokens_from_messages(messages, 'gpt-3.5-turbo-0613')} tokens used for the question")
+    if verbose: print(f"{num_tokens_from_messages(messages, ll_model)} tokens used for the question")
 
     completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0613",
+        # model="gpt-3.5-turbo-0613",
+        model=ll_model,
         messages=messages,
         temperature=temp
     )
