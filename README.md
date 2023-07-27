@@ -23,9 +23,15 @@ TGNotebook\TG_bot\
 
 ## Structure of the .env file:
 TOKEN = '???'   # TG bot token
+
 API_KEY = '???' # Open AI API Key
+
 SYSTEM_DOC_URL = '???'          # prompt
+
 KNOWLEDGE_BASE_URL = '????'     # knowledge base
+
 VERBOSE = 1                     # Display technical information
+
 TEMPERATURE = 1                 # Model temperature
+
 LL_MODEL = "gpt-3.5-turbo-0613" # Model
