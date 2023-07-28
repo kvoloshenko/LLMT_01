@@ -34,6 +34,8 @@ verbose = os.environ.get("VERBOSE")
 print(f'verbose={verbose}')
 temperature = float(os.environ.get("TEMPERATURE"))
 print(f'temperature={temperature}')
+# separator = os.environ.get("CHARACTER_TEXT_SPLITTER_SEPARATOR")
+# print(f'separator={separator}')
 
 openai.api_key = api_key
 def load_document_text(url: str) -> str:
@@ -63,6 +65,8 @@ def create_embedding(data):
 
     source_chunks = []
     splitter = CharacterTextSplitter(separator="\n", chunk_size=1024, chunk_overlap=0)
+    # Так почему-то не работает с separator='~'
+    # splitter = CharacterTextSplitter(separator=separator, chunk_size=1024, chunk_overlap=0)
 
     for chunk in splitter.split_text(data):
         source_chunks.append(Document(page_content=chunk, metadata={}))
