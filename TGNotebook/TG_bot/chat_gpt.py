@@ -65,7 +65,7 @@ def create_embedding(data):
 
     source_chunks = []
     splitter = CharacterTextSplitter(separator="\n", chunk_size=1024, chunk_overlap=0)
-    # Так почему-то не работает с separator='~'
+    # Так не работает
     # splitter = CharacterTextSplitter(separator=separator, chunk_size=1024, chunk_overlap=0)
 
     for chunk in splitter.split_text(data):
@@ -137,7 +137,7 @@ def answer_index(system, topic, search_index, temp=1, verbose = 0):
     # Поиск релевантных отрезков из базы знаний
     docs = search_index.similarity_search(topic, k=5)
     if verbose: print('\n ===========================================: ')
-    message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\nОтрывок документа №{i+1}\n=====================' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
+    message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\nОтрывок документа №{i+1}\n=====================\n' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
     if verbose: print('message_content :\n ======================================== \n', message_content)
 
     # messages = [
