@@ -38,6 +38,7 @@ print(f'temperature={temperature}')
 openai.api_key = api_key
 def load_document_text(url: str) -> str:
     # Extract the document ID from the URL
+    # функция для загрузки документа по ссылке из гугл док
     match_ = re.search('/document/d/([a-zA-Z0-9-_]+)', url)
     if match_ is None:
         raise ValueError('Invalid Google Docs URL')
@@ -129,14 +130,20 @@ def insert_newlines(text: str, max_len: int = 170) -> str:
 def answer_index(system, topic, search_index, temp=1, verbose = 0):
 
     # Selecting documents similar to the question
+    # Поиск релевантных отрезков из базы знаний
     docs = search_index.similarity_search(topic, k=5)
     if verbose: print('\n ===========================================: ')
     message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\nОтрывок документа №{i+1}\n=====================' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
     if verbose: print('message_content :\n ======================================== \n', message_content)
 
+    # messages = [
+    #     {"role": "system", "content": system + f"{message_content}"},
+    #     {"role": "user", "content": topic}
+    # ]
     messages = [
-        {"role": "system", "content": system + f"{message_content}"},
-        {"role": "user", "content": topic}
+        {"role": "system", "content": system},
+        {"role": "user",
+         "content": f"Документ с информацией для ответа клиенту: {message_content}\n\nВопрос клиента: \n{topic}"}
     ]
 
     if verbose: print('\n ===========================================: ')
