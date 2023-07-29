@@ -22,6 +22,7 @@ from getpass import getpass
 import openai
 import tiktoken
 from dotenv import load_dotenv
+import pickle
 
 
 #api_key = getpass('Введите ваш ключ API:')
@@ -53,8 +54,35 @@ def load_document_text(url: str) -> str:
 
     return text
 
+# serialization_20230729
+# Function to check if a serialized search index exists
+def check_search_index():
+    if os.path.exists("search_index.pickle"):
+        with open("search_index.pickle", "rb") as file:
+            print('Восстановили Базу знаний из файла search_index.pickle')
+            return pickle.load(file)
+    else:
+        print('Отсутствует сохраненный файл Базы знаний search_index.pickle')
+        return None
+
+# serialization_20230729
+# Function to create and save a search index
+def create_permanent_search_index(text: str) -> Chroma:
+    # Check if a saved search index exists
+    search_index = check_search_index()
+
+    if search_index is None:
+        # If no search index exists, create a new one
+        search_index = create_embedding(text)
+
+        # Save the search index
+        with open("search_index.pickle", "wb") as file:
+            pickle.dump(search_index, file)
+    return search_index
+
 def create_search_index(text: str) -> Chroma:
     return create_embedding(text)
+    # return create_permanent_search_index(text) # serialization_20230729
 
 
 def create_embedding(data):

@@ -1,0 +1,5 @@
+
+1. Сохрянять output в файл, файл именовать по дате. Заготовка: output2file.py
+
+2. serialization_20230729 Сохранять индексированную БД знаний в файл - новая функция return create_permanent_search_index(text)
+заготовка: chat_gpt_t001.py
