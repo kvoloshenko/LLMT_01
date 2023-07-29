@@ -23,6 +23,7 @@ import openai
 import tiktoken
 from dotenv import load_dotenv
 
+
 #api_key = getpass('Введите ваш ключ API:')
 # возьмем переменные окружения из .env
 load_dotenv()

@@ -14,6 +14,9 @@ from dotenv import load_dotenv
 import time
 import os
 import chat_gpt
+import output2file
+
+# output2file.output2file_on()
 
 # возьмем переменные окружения из .env
 load_dotenv()
@@ -112,6 +115,8 @@ def main():
     # запуск приложения (для остановки нужно нажать Ctrl-C)
     application.run_polling()
 
+
+# output2file.output2file_off()
 
 if __name__ == "__main__":
     main()
