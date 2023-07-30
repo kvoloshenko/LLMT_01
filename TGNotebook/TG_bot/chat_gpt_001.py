@@ -98,6 +98,11 @@ def answer_user_question(system_doc_url, knowledge_base_url, topic):
     print(f'type(embeddings)={type(embeddings)}')
     print(f'type(db)={type(db)}')
 
+    for c in source_chunks: # Поиск слишком больших чанков
+        if len(c.page_content) > CHUNK_SIZE:
+            print(f'chunk_len ={len(c.page_content)}')
+            print(f'content ={c.page_content}')
+
     ans = answer_index(system, topic, db)  # получите ответ модели
     print(f'type(ans)={type(ans)}')
     print(ans)
