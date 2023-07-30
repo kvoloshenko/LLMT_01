@@ -9,6 +9,10 @@ Colab notebooks:
 * LLMT_01_001_ru.ipynb
 
 # Creating Telegram Bots with ChatGPT:
+
+## Integration of Telegram bot and ChatGPT
+![](TGNotebook/IntegrationTG-botChatGPT_01.png)
+
 Video explanation in Russian see here:  https://youtu.be/8rKedN9tiuo
 
 Colab notebook:
