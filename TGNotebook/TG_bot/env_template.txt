@@ -1,0 +1,8 @@
+TOKEN = '???'        # TG bot token
+API_KEY = '???' # Open AI API Key
+# УИИ учебный:
+SYSTEM_DOC_URL = 'https://docs.google.com/document/d/1eG-WfEiwyJZIZPgi-GK7-Q9ueO1FNcgfvFjsAf99N6g'     # промпт
+KNOWLEDGE_BASE_URL = 'https://docs.google.com/document/d/1eVdtf7fpChQl7dKic-qI-BFjNtSGkAbQ'            # база знаний
+VERBOSE = 1                       # Выводить тех. инфу
+TEMPERATURE = 1                   # Температура модели
+LL_MODEL = "gpt-3.5-turbo-0613"   # Модель
