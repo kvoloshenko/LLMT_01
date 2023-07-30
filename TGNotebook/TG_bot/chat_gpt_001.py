@@ -94,9 +94,9 @@ def answer_user_question(system_doc_url, knowledge_base_url, topic):
     # Создадим индексную базу из разделенных фрагментов текста
     db = FAISS.from_documents(source_chunks, embeddings)
 
-    print(f'type(source_chunks)={type(source_chunks)}')
-    print(f'type(embeddings)={type(embeddings)}')
-    print(f'type(db)={type(db)}')
+    # print(f'type(source_chunks)={type(source_chunks)}')
+    # print(f'type(embeddings)={type(embeddings)}')
+    # print(f'type(db)={type(db)}')
 
     for c in source_chunks: # Поиск слишком больших чанков
         if len(c.page_content) > CHUNK_SIZE:
@@ -104,20 +104,20 @@ def answer_user_question(system_doc_url, knowledge_base_url, topic):
             print(f'content ={c.page_content}')
 
     ans = answer_index(system, topic, db)  # получите ответ модели
-    print(f'type(ans)={type(ans)}')
-    print(ans)
+    # print(f'type(ans)={type(ans)}')
+    # print(ans)
 
     return ans
 
 
-def do_test(topic):
-    SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
-    print (f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
-    KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
-    print (f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
-    ans = answer_user_question(SYSTEM_DOC_URL, KNOWLEDGE_BASE_URL, topic)
-
-do_test('а какие игры у вас есть?')
+# def do_test(topic):
+#     SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
+#     print (f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
+#     KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
+#     print (f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
+#     ans = answer_user_question(SYSTEM_DOC_URL, KNOWLEDGE_BASE_URL, topic)
+#
+# do_test('а какие игры у вас есть?')
 
 
 

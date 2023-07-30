@@ -13,7 +13,8 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from dotenv import load_dotenv
 import time
 import os
-import chat_gpt
+# import chat_gpt
+import chat_gpt_001 as chat_gpt
 # import output2file
 
 
