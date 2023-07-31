@@ -12,7 +12,14 @@ Colab notebooks:
 
 ## Integration of Telegram bot and ChatGPT
 
+### Here is an example for an Anticafe type establishment:
+
+![](TGNotebook/МансардаПример_01.png)
+
+### How it works:
+
 ![](TGNotebook/IntegrationTG-botChatGPT_02_en.png)
+
 
 Video explanation in Russian see here:  https://youtu.be/8rKedN9tiuo
 
