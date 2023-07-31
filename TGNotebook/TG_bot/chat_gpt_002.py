@@ -8,6 +8,7 @@ from langchain.vectorstores import FAISS
 import openai
 from dotenv import load_dotenv
 
+
 load_dotenv()
 # Загрузка значений из .env
 API_KEY = os.environ.get("API_KEY")

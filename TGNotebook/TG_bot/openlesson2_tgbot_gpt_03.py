@@ -13,10 +13,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from dotenv import load_dotenv
 import time
 import os
-# import chat_gpt
 import chat_gpt_002 as chat_gpt
-# import output2file
-
 
 
 # возьмем переменные окружения из .env
@@ -77,8 +74,6 @@ def main():
     application = Application.builder().token(TOKEN).build()
     print('Бот запущен..!')
 
-    # output2file.output2file_on()
-
     # добавляем обработчик команды /start
     application.add_handler(CommandHandler("start", start))
 
@@ -87,9 +82,6 @@ def main():
 
     # запуск приложения (для остановки нужно нажать Ctrl-C)
     application.run_polling()
-
-    # output2file.output2file_off()
-
 
 
 
