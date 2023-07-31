@@ -2,6 +2,20 @@
 
 Можно попробовать все сделать вручную…
 
+https://visualstudio.microsoft.com/vs/community/
+https://visualstudio.microsoft.com/visual-cpp-build-tools/
+https://github.com/chroma-core/chroma/issues/189
+
+You need to download https://visualstudio.microsoft.com/visual-cpp-build-tools/ first.
+Next, navigate to "Individual components", find these two
+image
+
+In your case, you should choose Windows 10 SDK
+
+vs_BuildTools.exe
+
+
+
 Какая у вас операционка? У меня Windows 10. Все дальнейшие шаги для Windows.
 
 Какая версия Python? У меня 3.10.9. Выполните: python.exe -V
