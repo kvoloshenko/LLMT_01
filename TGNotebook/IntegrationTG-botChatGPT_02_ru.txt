@@ -1,0 +1,40 @@
+@startuml
+title "Интеграция Телеграмм-бота и ChatGPT"
+hide footbox
+
+actor User as u
+participant "TG bot" as b
+participant Application as s
+participant "Google Drive" as drive
+participant CharacterTextSplitter as splitter
+database    "Индексная DB" as db
+participant ChatGPT as chat
+
+drive <- s: Загрузка файла с Промтом
+drive <- s: Загрузка файла с Базой Знаний
+group "async text(update, context) # функция TG-бота для текстовых сообщений"
+
+	u -> b : вопрос
+	b <- s : Получение вопроса пользователя
+
+	s -> splitter: Разбиение Базы Знаний на чанки
+	s <-- splitter: source_chunks
+	s -> db: Создание индексной базы (source_chunks)
+	db -> db: Перевод чанков Базы Знаний в эмбеддинги
+	s -> db: Поиск релевантных чанков(База Знаний, вопрос, количество)
+	s <-- db: message_content
+	s -> chat: Запрос ChatGPT (Промт, message_content, температура)
+	note right
+	  Примечание:
+	  * Промт определяет базовую
+	  инструкцию для ChatGPT
+	  * message_content содержит
+	  вопрос и релевантные чанки
+	  * Температура управляет степенью
+	случайности выходных данных
+	end note
+	s <-- chat: ответ
+	b <-- s: ответ
+	u <-- b: ответ
+end
+@enduml

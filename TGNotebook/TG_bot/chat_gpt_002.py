@@ -26,6 +26,13 @@ print(f'VERBOSE={VERBOSE}')
 TEMPERATURE = float(os.environ.get("TEMPERATURE")) # Температура модели
 print(f'TEMPERATURE={TEMPERATURE}')
 
+SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
+print (f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
+
+KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
+print (f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
+
+
 def load_document_text(url: str) -> str:
     # Extract the document ID from the URL
     match_ = re.search('/document/d/([a-zA-Z0-9-_]+)', url)
@@ -40,6 +47,13 @@ def load_document_text(url: str) -> str:
 
     return text
 
+# Инструкция для GPT, которая будет подаваться в system
+system = load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
+if VERBOSE: print(f'\n ===========================================\nsystem={system}')
+
+# База знаний, которая будет подаваться в LangChain
+database = load_document_text(KNOWLEDGE_BASE_URL)  # Загрузка файла с Базой Знаний
+if VERBOSE: print(f'\n ===========================================\ndatabase={database}\n ===========================================')
 
 # Функция, которая позволяет выводить ответ модели в удобочитаемом виде
 def insert_newlines(text: str, max_len: int = 170) -> str:
@@ -64,8 +78,6 @@ def answer_index(system, topic, search_index, temp=TEMPERATURE, verbose=VERBOSE)
     message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\n===================== Отрывок документа №{i+1} =====================\n' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
     if verbose: print('message_content :\n ======================================== \n', message_content)
 
-    if verbose: print(f'system={system}')
-
     messages = [
         {"role": "system", "content": system},
         {"role": "user", "content": f"Документ с информацией для ответа клиенту: {message_content}\n\nВопрос клиента: \n{topic}"}
@@ -84,12 +96,7 @@ def answer_index(system, topic, search_index, temp=TEMPERATURE, verbose=VERBOSE)
     return answer  # возвращает ответ
 
 
-def answer_user_question(system_doc_url, knowledge_base_url, topic):
-    # Инструкция для GPT, которая будет подаваться в system
-    system = load_document_text(system_doc_url)  # Загрузка файла с Промтом
-
-    # База знаний, которая будет подаваться в LangChain
-    database = load_document_text(knowledge_base_url)  # Загрузка файла с Базой Знаний
+def answer_user_question(topic):
 
     source_chunks = []
     splitter = CharacterTextSplitter(separator="\n", chunk_size=1024, chunk_overlap=0)
@@ -118,15 +125,15 @@ def answer_user_question(system_doc_url, knowledge_base_url, topic):
 
     return ans
 
+def do_test(topic):
+    ans = answer_user_question(topic)
+    return ans
 
-# def do_test(topic):
-#     SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
-#     print (f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
-#     KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
-#     print (f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
-#     ans = answer_user_question(SYSTEM_DOC_URL, KNOWLEDGE_BASE_URL, topic)
-#
-# do_test('а какие игры у вас есть?')
+if __name__ == '__main__':
+    topic = 'Привет! Ты кто?'
+    print(f'topic={topic}')
+    response = do_test(topic)
+    print(f'response={response}')
 
 
 

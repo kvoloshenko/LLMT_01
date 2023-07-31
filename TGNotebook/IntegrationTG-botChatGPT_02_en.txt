@@ -1,0 +1,40 @@
+@startuml
+title "Integrating Telegram Bot and ChatGPT"
+hide footbox
+
+actor User as u
+participant "TG bot" as b
+participant Application as s
+participant "Google Drive" as drive
+participant CharacterTextSplitter as splitter
+database "Index DB" as db
+participant ChatGPT as chat
+
+drive <- s: Download file with Promt
+drive <- s: Download file with Knowledge Base
+
+group "async text(update, context) # TG bot function for text messages"
+	u -> b : Question
+	b <- s : Get the user's question
+
+	s -> splitter: Splitting the Knowledge Base into chunks
+	s <-- splitter: source_chunks
+	s -> db: Create an index database (source_chunks)
+	db -> db: Converting Knowledge Base Fragments to Embedding
+	s -> db: Search for relevant chunks (Knowledge Base, Question, Quantity)
+	s <-- db:message_content
+	s -> chat: ChatGPT request(Promt, message_content, temperature)
+	note right
+	   Note:
+	   * Promt determines the base
+	   instructions for ChatGPT
+	   * message_content contains
+	   Question and relevant chunks
+	   * temperature: controls the degree
+	   of randomness of the model output
+	end note
+	s <-- chat: Response
+	b <-- s: Response
+	u <-- b: Response
+end
+@enduml
