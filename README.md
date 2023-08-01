@@ -14,7 +14,7 @@ Colab notebooks:
 
 ### Here is an example for an Anticafe type establishment:
 
-![](TGNotebook/Docs/МансардаПример_01.png)
+![AtticExample_01.png](TGNotebook%2FDocs%2FAtticExample_01.png)
 
 ### How it works:
 

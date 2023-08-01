@@ -23,7 +23,12 @@ load_dotenv()
 TOKEN = os.environ.get("TOKEN")
 # print (f'TOKEN = {TOKEN}')
 
+TEXT_BEGINNING = os.environ.get("TEXT_BEGINNING")
+print (f'TEXT_BEGINNING = {TEXT_BEGINNING}')
 
+
+TEXT_END = os.environ.get("TEXT_END")
+print (f'TEXT_END = {TEXT_END}')
 
 # функция команды /start
 async def start(update, context):
@@ -45,7 +50,8 @@ async def text(update, context):
 
 
     topic = update.message.text
-    response  = chat_gpt.answer_user_question(topic)
+    response  = TEXT_BEGINNING + '\n'
+    response  = response + chat_gpt.answer_user_question(topic) + '\n' + TEXT_END
 
 
     # my_message = await update.message.reply_text(f'Получено текстовое сообщение: {update.message.text}')
