@@ -33,7 +33,7 @@ TGNotebook\TG_bot\
 * openlesson2_tgbot_gpt_01.py - Modified Echo Bot for a simple ChatGTP request;
 * openlesson2_tgbot_gpt_02.py - Modified Echo Bot for requesting a pre-trained ChatGPT;
 
-## Structure of the .env file:
+### Structure of the .env file:
 TOKEN = '???'   # TG bot token
 
 API_KEY = '???' # Open AI API Key
@@ -55,3 +55,9 @@ LL_MODEL = "gpt-3.5-turbo-0613" # Model
 TEXT_BEGINNING = ''             # Text at the beginning
 
 TEXT_END = ''                   # Text at the end
+
+### Links to openai documentation:
+
+Chat Completions API: https://platform.openai.com/docs/guides/gpt/chat-completions-api
+
+Chat completions response format: https://platform.openai.com/docs/guides/gpt/chat-completions-response-format
