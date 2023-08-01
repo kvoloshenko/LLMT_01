@@ -1,39 +1,24 @@
-# LLMT_01
-Python: LLM tools
+# Создание Telegram-ботов с ChatGPT
+Версия для Антикафе Мансарда 
 
-# LLMT_01
-LangChain: The sourse idea is here https://youtu.be/aywZrzNaKjs 
+## Предварительные действия:
 
-Colab notebooks:
-* LLMT_01_001_en.ipynb
-* LLMT_01_001_ru.ipynb
-
-# Creating Telegram Bots with ChatGPT:
+1. Зарегистрировать свой TG bot c помощью @BotFather и получить TOKEN.2. 
+3. Получить Open AI API_KEY
 
 ## Integration of Telegram bot and ChatGPT
 
-### Here is an example for an Anticafe type establishment:
+## Пример для Антикафе Мансарда:
 
-![AtticExample_01.png](TGNotebook%2FDocs%2FAtticExample_01.png)
+![](TGNotebook/Docs/МансардаПример_01.png)
+## Как это работает:
 
-### How it works:
-
-![](TGNotebook/Docs/IntegrationTG-botChatGPT_02_en.png)
-
+![](TGNotebook/Docs/IntegrationTG-botChatGPT_02_ru.png)
 
 Video explanation in Russian see here:  https://youtu.be/8rKedN9tiuo
 
-Colab notebook:
-TGNotebook\TG_Bot_vccTest01_ChatGPT_02_ru_pablic.ipynb
- 
-Modules:
-TGNotebook\TG_bot\
-* chat_gpt.py - Module for OPEN API support;
-* openlesson2_tgbot.py - Source Echo Bot;
-* openlesson2_tgbot_gpt_01.py - Modified Echo Bot for a simple ChatGTP request;
-* openlesson2_tgbot_gpt_02.py - Modified Echo Bot for requesting a pre-trained ChatGPT;
 
-### Structure of the .env file:
+### Структура файла .env
 TOKEN = '???'   # TG bot token
 
 API_KEY = '???' # Open AI API Key
