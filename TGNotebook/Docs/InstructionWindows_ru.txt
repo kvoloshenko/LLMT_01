@@ -14,7 +14,30 @@ In your case, you should choose Windows 10 SDK
 
 vs_BuildTools.exe
 
+pip install wheel
+pip install --upgrade setuptools
+pip install chromadb
+-----------------
+Building wheels for collected packages: chroma-hnswlib
+  Building wheel for chroma-hnswlib (pyproject.toml) ... error
+  error: subprocess-exited-with-error
 
+  × Building wheel for chroma-hnswlib (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [5 lines of output]
+      running bdist_wheel
+      running build
+      running build_ext
+      building 'hnswlib' extension
+      error: Microsoft Visual C++ 14.0 or greater is required. Get it with "Microsoft C++ Build Tools": https://visualstudio.microsoft.com/visual-cpp-build-tools/
+      [end of output]
+
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for chroma-hnswlib
+Failed to build chroma-hnswlib
+ERROR: Could not build wheels for chroma-hnswlib, which is required to install pyproject.toml-based projects
+
+-----------------
 
 Какая у вас операционка? У меня Windows 10. Все дальнейшие шаги для Windows.
 
@@ -41,6 +64,9 @@ requirements.txt
 C:\_Proj\TG_bot_01\venv\Scripts\activate.bat
 При этом должны увидеть
 (venv) C:\_Proj\TG_bot_01\venv\Scripts>
+
+При необходимости обносить pip, выполнив:
+python.exe -m pip install --upgrade pip
 
 Установите в окружение все зависимости выполнив:
 pip install -r C:\_Proj\TG_bot_01\requirements.txt
