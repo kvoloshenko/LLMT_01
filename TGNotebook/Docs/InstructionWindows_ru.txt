@@ -5,6 +5,7 @@
 https://visualstudio.microsoft.com/vs/community/
 https://visualstudio.microsoft.com/visual-cpp-build-tools/
 https://github.com/chroma-core/chroma/issues/189
+https://github.com/nmslib/hnswlib/issues/442
 
 You need to download https://visualstudio.microsoft.com/visual-cpp-build-tools/ first.
 Next, navigate to "Individual components", find these two
@@ -17,6 +18,7 @@ vs_BuildTools.exe
 pip install wheel
 pip install --upgrade setuptools
 pip install chromadb
+pip install chromadb==0.3.26
 -----------------
 Building wheels for collected packages: chroma-hnswlib
   Building wheel for chroma-hnswlib (pyproject.toml) ... error
