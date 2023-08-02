@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 /LLMT_01.env
 /TGNotebook/TG_bot/env
+/TGNotebook/TG_bot/tgbot_gpt_log.txt

@@ -14,6 +14,9 @@ from dotenv import load_dotenv
 import time
 import os
 import chat_gpt_002 as chat_gpt
+import logging
+logfilename = "tgbot_gpt_log.txt"
+logging.basicConfig(level=logging.INFO, filename=logfilename,filemode="w")
 
 
 # возьмем переменные окружения из .env
@@ -24,11 +27,11 @@ TOKEN = os.environ.get("TOKEN")
 # print (f'TOKEN = {TOKEN}')
 
 TEXT_BEGINNING = os.environ.get("TEXT_BEGINNING")
-print (f'TEXT_BEGINNING = {TEXT_BEGINNING}')
+logging.info (f'TEXT_BEGINNING = {TEXT_BEGINNING}')
 
 
 TEXT_END = os.environ.get("TEXT_END")
-print (f'TEXT_END = {TEXT_END}')
+logging.info (f'TEXT_END = {TEXT_END}')
 
 # функция команды /start
 async def start(update, context):
@@ -40,12 +43,12 @@ async def text(update, context):
 
     # использование update
     # print(update)
-    print('-------------------')
-    print(f'text: {update.message.text}')
-    print(f'date: {update.message.date}')
-    print(f'id message: {update.message.message_id}')
-    print(f'name: {update.message.from_user.first_name}')
-    print(f'user.id: {update.message.from_user.id}')
+    logging.info('-------------------')
+    logging.info(f'text: {update.message.text}')
+    logging.info(f'date: {update.message.date}')
+    logging.info(f'id message: {update.message.message_id}')
+    logging.info(f'name: {update.message.from_user.first_name}')
+    logging.info(f'user.id: {update.message.from_user.id}')
     # print('-------------------')
 
 
@@ -56,8 +59,8 @@ async def text(update, context):
 
     # my_message = await update.message.reply_text(f'Получено текстовое сообщение: {update.message.text}')
     my_message = await update.message.reply_text(f'{response}')
-    print(f'answer: {response}')
-    print('-------------------')
+    logging.info(f'answer: {response}')
+    logging.info('-------------------')
 
     # использованеи context
 
@@ -79,6 +82,7 @@ def main():
     # точка входа в приложение
     application = Application.builder().token(TOKEN).build()
     print('Бот запущен..!')
+    logging.info("Bot started..!")
 
     # добавляем обработчик команды /start
     application.add_handler(CommandHandler("start", start))
