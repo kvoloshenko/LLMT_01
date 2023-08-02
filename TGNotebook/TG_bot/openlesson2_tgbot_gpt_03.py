@@ -15,8 +15,8 @@ import time
 import os
 import chat_gpt_002 as chat_gpt
 import logging
-logfilename = "tgbot_gpt_log.txt"
-logging.basicConfig(level=logging.INFO, filename=logfilename,filemode="w")
+logfilename = "Logs/tgbot_gpt_log.txt"
+logging.basicConfig(level=logging.INFO, filename=logfilename,filemode="a")
 
 
 # возьмем переменные окружения из .env
@@ -24,11 +24,9 @@ load_dotenv()
 
 # загружаем значеняи из файла .env
 TOKEN = os.environ.get("TOKEN")
-# print (f'TOKEN = {TOKEN}')
 
 TEXT_BEGINNING = os.environ.get("TEXT_BEGINNING")
-logging.info (f'TEXT_BEGINNING = {TEXT_BEGINNING}')
-
+logging.info(f'TEXT_BEGINNING = {TEXT_BEGINNING}')
 
 TEXT_END = os.environ.get("TEXT_END")
 logging.info (f'TEXT_END = {TEXT_END}')
