@@ -59,6 +59,24 @@ logging.info(f'*** Промт="{system}" ***')
 database = load_document_text(KNOWLEDGE_BASE_URL)  # Загрузка файла с Базой Знаний
 logging.info(f'*** База знаний="{database}" ***')
 
+source_chunks = []
+splitter = CharacterTextSplitter(separator="\n", chunk_size=1024, chunk_overlap=0)
+
+for chunk in splitter.split_text(database):
+    source_chunks.append(Document(page_content=chunk, metadata={}))
+
+# Инициализирум модель эмбеддингов
+embeddings = OpenAIEmbeddings()
+
+# Создадим индексную базу из разделенных фрагментов текста
+db = FAISS.from_documents(source_chunks, embeddings)
+
+for chunk in source_chunks:  # Поиск слишком больших чанков
+    if len(chunk.page_content) > CHUNK_SIZE:
+        logging.warning(f'*** Слишком большой кусок! ***')
+        logging.warning(f'chunk_len ={len(chunk.page_content)}')
+        logging.warning(f'content ={chunk.page_content}')
+
 # Функция, которая позволяет выводить ответ модели в удобочитаемом виде
 def insert_newlines(text: str, max_len: int = 170) -> str:
     words = text.split()
@@ -72,10 +90,10 @@ def insert_newlines(text: str, max_len: int = 170) -> str:
     lines.append(current_line)
     return " ".join(lines)
 
-def answer_index(system, topic, search_index, temp=TEMPERATURE):
+def answer_index(system, topic, index_db, temp=TEMPERATURE):
 
     # Поиск релевантных отрезков из базы знаний
-    docs = search_index.similarity_search(topic, k = NUMBER_RELEVANT_CHUNKS)
+    docs = index_db.similarity_search(topic, k = NUMBER_RELEVANT_CHUNKS)
 
     logging.info('\n ===========================================: ')
     message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\n ===================== Отрывок документа №{i+1} =====================\n' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
@@ -100,27 +118,7 @@ def answer_index(system, topic, search_index, temp=TEMPERATURE):
 
 
 def answer_user_question(topic):
-
-    source_chunks = []
-    splitter = CharacterTextSplitter(separator="\n", chunk_size=1024, chunk_overlap=0)
-
-    for chunk in splitter.split_text(database):
-        source_chunks.append(Document(page_content=chunk, metadata={}))
-
-    # Инициализирум модель эмбеддингов
-    embeddings = OpenAIEmbeddings()
-
-    # Создадим индексную базу из разделенных фрагментов текста
-    db = FAISS.from_documents(source_chunks, embeddings)
-
-    for chunk in source_chunks: # Поиск слишком больших чанков
-        if len(chunk.page_content) > CHUNK_SIZE:
-            logging.warning(f'*** Слишком большой кусок! ***')
-            logging.warning(f'chunk_len ={len(chunk.page_content)}')
-            logging.warning(f'content ={chunk.page_content}')
-
     ans = answer_index(system, topic, db)  # получите ответ модели
-
     return ans
 
 def do_test(topic):
