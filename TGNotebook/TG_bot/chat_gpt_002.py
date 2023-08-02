@@ -7,7 +7,7 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 import openai
 from dotenv import load_dotenv
-import logging
+
 
 load_dotenv()
 # Загрузка значений из .env
@@ -16,25 +16,25 @@ os.environ["OPENAI_API_KEY"] = API_KEY
 openai.api_key = API_KEY
 
 LL_MODEL = os.environ.get("LL_MODEL") # модель
-logging.info(f'LL_MODEL = {LL_MODEL}')
+#logging.info(f'LL_MODEL = {LL_MODEL}')
 
 CHUNK_SIZE = int(os.environ.get("CHUNK_SIZE")) # Количество токинов в  чанке
-logging.info(f'CHUNK_SIZE={CHUNK_SIZE}')
+#logging.info(f'CHUNK_SIZE={CHUNK_SIZE}')
 
 NUMBER_RELEVANT_CHUNKS = int(os.environ.get("NUMBER_RELEVANT_CHUNKS"))   # Количество релевантных чанков
-logging.info(f'NUMBER_RELEVANT_CHUNKS={NUMBER_RELEVANT_CHUNKS}')
+#logging.info(f'NUMBER_RELEVANT_CHUNKS={NUMBER_RELEVANT_CHUNKS}')
 
 VERBOSE = int(os.environ.get("VERBOSE")) # Выводить тех. инфу
-logging.info(f'VERBOSE={VERBOSE}')
+#logging.info(f'VERBOSE={VERBOSE}')
 
 TEMPERATURE = float(os.environ.get("TEMPERATURE")) # Температура модели
-logging.info(f'TEMPERATURE={TEMPERATURE}')
+#logging.info(f'TEMPERATURE={TEMPERATURE}')
 
 SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
-logging.info(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
+#logging.info(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
 
 KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
-logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
+#logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
 
 def load_document_text(url: str) -> str:

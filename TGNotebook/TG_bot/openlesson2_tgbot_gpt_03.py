@@ -15,8 +15,8 @@ import time
 import os
 import chat_gpt_002 as chat_gpt
 import logging
-logfilename = "Logs/tgbot_gpt_log.txt"
-logging.basicConfig(level=logging.INFO, filename=logfilename,filemode="a")
+logfilename = "Logs/tgbot_gpt.log"
+logging.basicConfig(level=logging.INFO, filename=logfilename,filemode="w")
 
 
 # возьмем переменные окружения из .env
