@@ -7,7 +7,10 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 import openai
 from dotenv import load_dotenv
+import logging
 
+logfilename = "Logs/tgbot_gpt.log"
+logging.basicConfig(level=logging.INFO, filename=logfilename,filemode="w")
 
 load_dotenv()
 # Загрузка значений из .env
@@ -16,25 +19,22 @@ os.environ["OPENAI_API_KEY"] = API_KEY
 openai.api_key = API_KEY
 
 LL_MODEL = os.environ.get("LL_MODEL") # модель
-#logging.info(f'LL_MODEL = {LL_MODEL}')
+logging.info(f'LL_MODEL = {LL_MODEL}')
 
 CHUNK_SIZE = int(os.environ.get("CHUNK_SIZE")) # Количество токинов в  чанке
-#logging.info(f'CHUNK_SIZE={CHUNK_SIZE}')
+logging.info(f'CHUNK_SIZE={CHUNK_SIZE}')
 
 NUMBER_RELEVANT_CHUNKS = int(os.environ.get("NUMBER_RELEVANT_CHUNKS"))   # Количество релевантных чанков
-#logging.info(f'NUMBER_RELEVANT_CHUNKS={NUMBER_RELEVANT_CHUNKS}')
-
-VERBOSE = int(os.environ.get("VERBOSE")) # Выводить тех. инфу
-#logging.info(f'VERBOSE={VERBOSE}')
+logging.info(f'NUMBER_RELEVANT_CHUNKS={NUMBER_RELEVANT_CHUNKS}')
 
 TEMPERATURE = float(os.environ.get("TEMPERATURE")) # Температура модели
-#logging.info(f'TEMPERATURE={TEMPERATURE}')
+logging.info(f'TEMPERATURE={TEMPERATURE}')
 
 SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
-#logging.info(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
+logging.info(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
 
 KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
-#logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
+logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
 
 def load_document_text(url: str) -> str:
@@ -53,11 +53,11 @@ def load_document_text(url: str) -> str:
 
 # Инструкция для GPT, которая будет подаваться в system
 system = load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
-if VERBOSE: print(f'\n ===========================================\nsystem={system}')
+logging.info(f'*** Промт="{system}" ***')
 
 # База знаний, которая будет подаваться в LangChain
 database = load_document_text(KNOWLEDGE_BASE_URL)  # Загрузка файла с Базой Знаний
-if VERBOSE: print(f'\n ===========================================\ndatabase={database}\n ===========================================')
+logging.info(f'*** База знаний="{database}" ***')
 
 # Функция, которая позволяет выводить ответ модели в удобочитаемом виде
 def insert_newlines(text: str, max_len: int = 170) -> str:
@@ -72,24 +72,22 @@ def insert_newlines(text: str, max_len: int = 170) -> str:
     lines.append(current_line)
     return " ".join(lines)
 
-def answer_index(system, topic, search_index, temp=TEMPERATURE, verbose=VERBOSE):
+def answer_index(system, topic, search_index, temp=TEMPERATURE):
 
     # Поиск релевантных отрезков из базы знаний
     docs = search_index.similarity_search(topic, k = NUMBER_RELEVANT_CHUNKS)
-    # print(f'type(docs)={type(docs)}')
 
-    if verbose: print('\n ===========================================: ')
-    message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\n===================== Отрывок документа №{i+1} =====================\n' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
-    if verbose: print('message_content :\n ======================================== \n', message_content)
+    logging.info('\n ===========================================: ')
+    message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\n ===================== Отрывок документа №{i+1} =====================\n' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
+    logging.info(f'message_content :\n ======================================== \n {message_content}')
 
     messages = [
         {"role": "system", "content": system},
-        {"role": "user", "content": f"Документ с информацией для ответа клиенту: {message_content}\n\nВопрос клиента: \n{topic}"}
+        {"role": "user", "content": f"Документ с информацией для ответа клиенту: {message_content}\n\n Вопрос клиента: \n{topic}"}
     ]
-    # print(f'type(messages)={type(messages)}')
 
-    if verbose: print(f'temperature={temp}')
-    if verbose: print('\n ===========================================: ')
+    logging.info(f'temperature={temp}')
+    logging.info('\n ===========================================: ')
 
     completion = openai.ChatCompletion.create(
         model=LL_MODEL,
@@ -115,18 +113,13 @@ def answer_user_question(topic):
     # Создадим индексную базу из разделенных фрагментов текста
     db = FAISS.from_documents(source_chunks, embeddings)
 
-    # print(f'type(source_chunks)={type(source_chunks)}')
-    # print(f'type(embeddings)={type(embeddings)}')
-    # print(f'type(db)={type(db)}')
-
-    for c in source_chunks: # Поиск слишком больших чанков
-        if len(c.page_content) > CHUNK_SIZE:
-            print(f'chunk_len ={len(c.page_content)}')
-            print(f'content ={c.page_content}')
+    for chunk in source_chunks: # Поиск слишком больших чанков
+        if len(chunk.page_content) > CHUNK_SIZE:
+            logging.warning(f'*** Слишком большой кусок! ***')
+            logging.warning(f'chunk_len ={len(chunk.page_content)}')
+            logging.warning(f'content ={chunk.page_content}')
 
     ans = answer_index(system, topic, db)  # получите ответ модели
-    # print(f'type(ans)={type(ans)}')
-    # print(ans)
 
     return ans
 
