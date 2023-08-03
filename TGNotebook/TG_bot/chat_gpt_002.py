@@ -8,11 +8,15 @@ from langchain.vectorstores import FAISS
 import openai
 from dotenv import load_dotenv
 
+
 load_dotenv()
 # Загрузка значений из .env
 API_KEY = os.environ.get("API_KEY")
 os.environ["OPENAI_API_KEY"] = API_KEY
 openai.api_key = API_KEY
+
+LL_MODEL = os.environ.get("LL_MODEL") # модель
+print (f'LL_MODEL = {LL_MODEL}')
 
 CHUNK_SIZE = int(os.environ.get("CHUNK_SIZE")) # Количество токинов в  чанке
 print(f'CHUNK_SIZE={CHUNK_SIZE}')
@@ -88,7 +92,8 @@ def answer_index(system, topic, search_index, temp=TEMPERATURE, verbose=VERBOSE)
     if verbose: print('\n ===========================================: ')
 
     completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model=LL_MODEL,
+        # model = "gpt-3.5-turbo",
         messages=messages,
         temperature=temp
     )

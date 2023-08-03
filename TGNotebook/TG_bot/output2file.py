@@ -21,13 +21,14 @@ def output2file_off():
     # Reset the standard output to the console
     sys.stdout = sys.__stdout__
 
-# Usage
-# output2file_on()
-
-# Print statements will now be written to the file
-# print("This string will be written to the file")
-
-# output2file_off()
-
-# The rest of your code can continue writing to the console
-# print("This will be displayed on the console")
+# if __name__ == '__main__':
+#     # Usage
+#     output2file_on()
+#
+#     # Print statements will now be written to the file
+#     print("This string will be written to the file")
+#
+#     output2file_off()
+#
+#     # The rest of your code can continue writing to the console
+#     print("This will be displayed on the console")
