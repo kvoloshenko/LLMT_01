@@ -13,7 +13,7 @@
 ![](TGNotebook/Docs/МансардаПример_01.png)
 ## Как это работает:
 
-![](TGNotebook/Docs/IntegrationTG-botChatGPT_02_ru.png)
+![](TGNotebook/Docs/IntegrationTG-botChatGPT_03_ru.png)
 
 Video explanation in Russian see here:  https://youtu.be/8rKedN9tiuo
 
@@ -26,8 +26,6 @@ API_KEY = '???' # Open AI API Key
 SYSTEM_DOC_URL = '???'          # Prompt
 
 KNOWLEDGE_BASE_URL = '????'     # Knowledge Base
-
-VERBOSE = 1                     # Display technical information
 
 TEMPERATURE = 1                 # Model temperature
 

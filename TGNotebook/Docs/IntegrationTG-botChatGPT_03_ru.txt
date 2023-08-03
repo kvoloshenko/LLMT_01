@@ -12,15 +12,15 @@ participant ChatGPT as chat
 
 drive <- s: Загрузка файла с Промтом
 drive <- s: Загрузка файла с Базой Знаний
+s -> splitter: Разбиение Базы Знаний на чанки
+s <-- splitter: source_chunks
+s -> db: Создание индексной базы (source_chunks)
+db -> db: Перевод чанков Базы Знаний в эмбеддинги
+
 group "async text(update, context) # функция TG-бота для текстовых сообщений"
 
 	u -> b : вопрос
 	b <- s : Получение вопроса пользователя
-
-	s -> splitter: Разбиение Базы Знаний на чанки
-	s <-- splitter: source_chunks
-	s -> db: Создание индексной базы (source_chunks)
-	db -> db: Перевод чанков Базы Знаний в эмбеддинги
 	s -> db: Поиск релевантных чанков(База Знаний, вопрос, количество)
 	s <-- db: message_content
 	s -> chat: Запрос ChatGPT (Промт, message_content, температура)
