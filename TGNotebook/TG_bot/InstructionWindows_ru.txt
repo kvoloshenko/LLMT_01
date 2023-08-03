@@ -14,6 +14,7 @@ In your case, you should choose Windows 10 SDK
 
 vs_BuildTools.exe
 
+py -m pip install --upgrade pip setuptools wheel
 
 
 Какая у вас операционка? У меня Windows 10. Все дальнейшие шаги для Windows.
@@ -44,6 +45,7 @@ C:\_Proj\TG_bot_01\venv\Scripts\activate.bat
 
 Установите в окружение все зависимости выполнив:
 pip install -r C:\_Proj\TG_bot_01\requirements.txt
+pip install -r C:\_Proj\LLMT_01\TGNotebook\requirements.txt
 
 Запустите код бота выполнив:
 C:\_Proj\TG_bot_01\venv\Scripts\python.exe C:\_Proj\TG_bot_01\openlesson2_tgbot_gpt_02.py
