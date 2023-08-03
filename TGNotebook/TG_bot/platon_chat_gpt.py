@@ -8,8 +8,28 @@ from langchain.vectorstores import FAISS
 import openai
 from dotenv import load_dotenv
 import logging
+import datetime
 
-logfilename = "Logs/tgbot_gpt.log"
+# XML теги для лога
+LOG_S = '<log>'
+LOG_E = '</log>'
+X_CDATA_S = '<![CDATA['
+X_CDATA_E = ']]>'
+PROMPT_S = '<prompt>' + X_CDATA_S
+PROMPT_E = X_CDATA_E + '</prompt>'
+KNOWLEDGE_DB_S = '<kdb>' + X_CDATA_S
+KNOWLEDGE_DB_E = X_CDATA_E + '</kdb>'
+MESSAGE_CONTENT_S = '<mc>' + X_CDATA_S
+MESSAGE_CONTENT_E = X_CDATA_E + '</mc>'
+
+# Get the current date and time
+current_datetime = datetime.datetime.now()
+
+# Format the date and time as a string
+formatted_datetime = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+
+logfilename = "Logs/" + formatted_datetime + "_tgbot_gpt.log"
+logging.getLogger("faiss").setLevel(logging.ERROR)
 logging.basicConfig(level=logging.INFO, filename=logfilename,filemode="w")
 
 load_dotenv()
@@ -18,6 +38,7 @@ API_KEY = os.environ.get("API_KEY")
 os.environ["OPENAI_API_KEY"] = API_KEY
 openai.api_key = API_KEY
 
+logging.info(LOG_S)
 LL_MODEL = os.environ.get("LL_MODEL") # модель
 logging.info(f'LL_MODEL = {LL_MODEL}')
 
@@ -53,11 +74,11 @@ def load_document_text(url: str) -> str:
 
 # Инструкция для GPT, которая будет подаваться в system
 system = load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
-logging.info(f'*** Промт="{system}" ***')
+logging.info(f'{PROMPT_S}{system}{PROMPT_E}')
 
 # База знаний, которая будет подаваться в LangChain
 database = load_document_text(KNOWLEDGE_BASE_URL)  # Загрузка файла с Базой Знаний
-logging.info(f'*** База знаний="{database}" ***')
+logging.info(f'{KNOWLEDGE_DB_S}{database}{KNOWLEDGE_DB_E}')
 
 source_chunks = []
 splitter = CharacterTextSplitter(separator="\n", chunk_size=1024, chunk_overlap=0)
@@ -95,21 +116,17 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
     # Поиск релевантных отрезков из базы знаний
     docs = index_db.similarity_search(topic, k = NUMBER_RELEVANT_CHUNKS)
 
-    logging.info('\n ===========================================: ')
     message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\n ===================== Отрывок документа №{i+1} =====================\n' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
-    logging.info(f'message_content :\n ======================================== \n {message_content}')
+    logging.info(f'{MESSAGE_CONTENT_S}{message_content}{MESSAGE_CONTENT_E}')
 
     messages = [
         {"role": "system", "content": system},
         {"role": "user", "content": f"Документ с информацией для ответа клиенту: {message_content}\n\n Вопрос клиента: \n{topic}"}
     ]
 
-    logging.info(f'temperature={temp}')
-    logging.info('\n ===========================================: ')
 
     completion = openai.ChatCompletion.create(
         model=LL_MODEL,
-        # model = "gpt-3.5-turbo",
         messages=messages,
         temperature=temp
     )
