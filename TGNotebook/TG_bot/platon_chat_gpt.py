@@ -28,7 +28,7 @@ current_datetime = datetime.datetime.now()
 # Format the date and time as a string
 formatted_datetime = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
 
-logfilename = "Logs/" + formatted_datetime + "_tgbot_gpt.log"
+logfilename = "Logs/" + formatted_datetime + "_tgbot_gpt.xml"
 logging.getLogger("faiss").setLevel(logging.ERROR)
 logging.basicConfig(level=logging.INFO, filename=logfilename,filemode="w")
 

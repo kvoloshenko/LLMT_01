@@ -38,6 +38,9 @@ logging.info(f'TEXT_BEGINNING = {TEXT_BEGINNING}')
 TEXT_END = os.environ.get("TEXT_END")
 logging.info (f'TEXT_END = {TEXT_END}')
 
+QUESTION_FILTER = os.environ.get("QUESTION_FILTER")
+logging.info (f'QUESTION_FILTER = {QUESTION_FILTER}')
+
 # функция команды /start
 async def start(update, context):
   await update.message.reply_text('Привет! Это update_context бот.')
@@ -51,21 +54,31 @@ async def text(update, context):
     logging.info(f'{USER_ID_S}{update.message.from_user.id}{USER_ID_E}')
     logging.info(f'{MESSAGE_TEXT_S}{update.message.text}{MESSAGE_TEXT_E}')
     print('-------------------')
+    print(f'update: {update}')
     print(f'date: {update.message.date}')
     print(f'id message: {update.message.message_id}')
     print(f'name: {update.message.from_user.first_name}')
     print(f'user.id: {update.message.from_user.id}')
     print(f'text: {update.message.text}')
 
-    topic = update.message.text
-    reply_text = chat_gpt.answer_user_question(topic)
-    response = TEXT_BEGINNING + '\n'
-    response = response + reply_text + '\n' + TEXT_END
 
-    my_message = await update.message.reply_text(f'{response}')
-    logging.info(f'{REPLY_TEXT_S}{reply_text}{REPLY_TEXT_E}')
-    print(f'reply_text: {reply_text}')
-    print('-------------------')
+    topic = update.message.text
+    question_filter_len = len (QUESTION_FILTER)
+    print(f'question_filter_len={question_filter_len}')
+    topic_first_n = topic[:question_filter_len]
+    print(f'topic_first_n={topic_first_n}')
+
+    chat_type = update.message.chat.type
+
+    if (QUESTION_FILTER == topic_first_n) or (chat_type == 'private'):
+        reply_text = chat_gpt.answer_user_question(topic)
+        response = TEXT_BEGINNING + '\n'
+        response = response + reply_text + '\n' + TEXT_END
+
+        my_message = await update.message.reply_text(f'{response}')
+        logging.info(f'{REPLY_TEXT_S}{reply_text}{REPLY_TEXT_E}')
+        print(f'reply_text: {reply_text}')
+        print('-------------------')
 
     # использованеи context
 
