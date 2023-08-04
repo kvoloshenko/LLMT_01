@@ -124,13 +124,14 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
         {"role": "user", "content": f"Документ с информацией для ответа клиенту: {message_content}\n\n Вопрос клиента: \n{topic}"}
     ]
 
-
     completion = openai.ChatCompletion.create(
         model=LL_MODEL,
         messages=messages,
         temperature=temp
     )
+
     answer = insert_newlines(completion.choices[0].message.content)
+
     return answer  # возвращает ответ
 
 
