@@ -2,12 +2,23 @@
 
 ## Integration of Telegram bot and ChatGPT
 
-### Here is an example for an Anticafe type establishment:
+### Step 1: Simple Request
+Step_1_SimpleRequest.py
+
+![ChatCompletionsAPI_01.png](TGNotebook%2FDocs%2FChatCompletionsAPI_01.png)
+
+See: https://platform.openai.com/docs/guides/gpt/chat-completions-api
+
+### Step 2: Knowledge base
+Step_2_KnowledgeBase.py
+#### Here is an example for an Anticafe type establishment:
 
 ![AtticExample_01.png](TGNotebook%2FDocs%2FAtticExample_01.png)
 
-### How it works:
+### Step 3: TG bot and all together
+Step_3_TgBot.py
 
+#### How it works:
 ![](TGNotebook/Docs/IntegrationTG-botChatGPT_03_en.png)
 
 

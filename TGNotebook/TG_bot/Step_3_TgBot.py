@@ -1,7 +1,7 @@
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from dotenv import load_dotenv
 import os
-import nc_chat_gpt as chat_gpt
+import Step_2_KnowledgeBase as chat_gpt
 
 # Loading values from .env file
 load_dotenv()
