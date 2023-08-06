@@ -2,7 +2,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from dotenv import load_dotenv
 import time
 import os
-import platon_chat_gpt as chat_gpt
+import uii_chat_gpt as chat_gpt
 import logging
 
 # XML теги для лога
