@@ -17,7 +17,7 @@ result = openai.ChatCompletion.create(
   model=LL_MODEL,
   messages=[
         {"role": "system", "content": "You are a diligent assistant."},
-        {"role": "user", "content": "Where is the anti-cafe Mansarda located in St. Petersburg?"}
+        {"role": "user", "content": "who won the f1 championship in 2021?"}
     ]
 )
 
