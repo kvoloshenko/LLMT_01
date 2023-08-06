@@ -32,16 +32,12 @@ load_dotenv()
 # загружаем значеняи из файла .env
 TOKEN = os.environ.get("TOKEN")
 
-TEXT_BEGINNING = os.environ.get("TEXT_BEGINNING")
-logging.info(f'TEXT_BEGINNING = {TEXT_BEGINNING}')
+TEXT_BEGINNING = '*** Bot is talking to you: ***'
+print(f'TEXT_BEGINNING = {TEXT_BEGINNING}')
+TEXT_END = '*** Check the information with the manager! ***'
+print (f'TEXT_END = {TEXT_END}')
 
-TEXT_END = os.environ.get("TEXT_END")
-logging.info (f'TEXT_END = {TEXT_END}')
-
-print(f'os.environ.get("QUESTION_FILTER")={os.environ.get("QUESTION_FILTER")}')
-QUESTION_FILTER = os.environ.get("QUESTION_FILTER")
-if QUESTION_FILTER is None:
-    QUESTION_FILTER = ""
+QUESTION_FILTER = '@userVccTest01bot'
 
 # функция команды /start
 async def start(update, context):
