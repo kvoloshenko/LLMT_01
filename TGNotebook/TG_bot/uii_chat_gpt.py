@@ -38,25 +38,24 @@ API_KEY = os.environ.get("API_KEY")
 os.environ["OPENAI_API_KEY"] = API_KEY
 openai.api_key = API_KEY
 
-logging.info(LOG_S)
-LL_MODEL = os.environ.get("LL_MODEL") # модель
-logging.info(f'LL_MODEL = {LL_MODEL}')
+# модель: gpt-3.5-turbo-0613, gpt-3.5-turbo-0301, gpt-3.5-turbo-16k, gpt-3.5-turbo
+LL_MODEL = "gpt-3.5-turbo-0613"
+print(f'LL_MODEL = {LL_MODEL}')
 
-CHUNK_SIZE = int(os.environ.get("CHUNK_SIZE")) # Количество токинов в  чанке
-logging.info(f'CHUNK_SIZE={CHUNK_SIZE}')
+CHUNK_SIZE = 1024  # Количество токинов в  чанке
+print(f'CHUNK_SIZE={CHUNK_SIZE}')
 
-NUMBER_RELEVANT_CHUNKS = int(os.environ.get("NUMBER_RELEVANT_CHUNKS"))   # Количество релевантных чанков
-logging.info(f'NUMBER_RELEVANT_CHUNKS={NUMBER_RELEVANT_CHUNKS}')
+NUMBER_RELEVANT_CHUNKS = 5  # Количество релевантных чанков
+print(f'NUMBER_RELEVANT_CHUNKS={NUMBER_RELEVANT_CHUNKS}')
 
-TEMPERATURE = float(os.environ.get("TEMPERATURE")) # Температура модели
-logging.info(f'TEMPERATURE={TEMPERATURE}')
+TEMPERATURE = 1 # Температура модели
+print(f'TEMPERATURE={TEMPERATURE}')
 
-SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
-logging.info(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
+SYSTEM_DOC_URL = 'https://docs.google.com/document/d/1lfo1rxyxYg5-g-8GeGsGYlgcEZPJ3PBrdIx9grYCYVo/edit?usp=sharing' # промпт
+print(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
 
-KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
-logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
-
+KNOWLEDGE_BASE_URL = 'https://docs.google.com/document/d/1EGUz29mFJFaT6j-PuwHrwsp_F0H7ySBC/edit?usp=sharing&ouid=104673724125492337414&rtpof=true&sd=true' # база знаний
+print(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
 def load_document_text(url: str) -> str:
     # Extract the document ID from the URL
