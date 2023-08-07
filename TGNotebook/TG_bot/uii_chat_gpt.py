@@ -89,8 +89,11 @@ for chunk in splitter.split_text(database):
 # Инициализирум модель эмбеддингов
 embeddings = OpenAIEmbeddings()
 
-# Создадим индексную базу из разделенных фрагментов текста
-db = FAISS.from_documents(source_chunks, embeddings)
+try:
+    db = FAISS.from_documents(source_chunks, embeddings) # Создадим индексную базу из разделенных фрагментов текста
+except Exception as e: # обработка ошибок openai.error.RateLimitError
+    print(f'!!! External error, see log !!!')
+    logging.error(f'!!! External error: {str(e)}')
 
 for chunk in source_chunks:  # Поиск слишком больших чанков
     if len(chunk.page_content) > CHUNK_SIZE:
