@@ -62,9 +62,7 @@ async def text(update, context):
 
     topic = update.message.text
     question_filter_len = len (QUESTION_FILTER)
-    print(f'question_filter_len={question_filter_len}')
     topic_first_n = topic[:question_filter_len]
-    print(f'topic_first_n={topic_first_n}')
 
     chat_type = update.message.chat.type
 
