@@ -52,10 +52,10 @@ TEMPERATURE = 1 # Температура модели
 print(f'TEMPERATURE={TEMPERATURE}')
 
 
-SYSTEM_DOC_URL = 'https://docs.google.com/document/d/1eG-WfEiwyJZIZPgi-GK7-Q9ueO1FNcgfvFjsAf99N6g'     # промпт
+SYSTEM_DOC_URL = 'https://docs.google.com/document/d/1WHHMJS1zZDWZHjawy3zQjhTwm4JsHgWI'    # промпт
 print(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
 
-KNOWLEDGE_BASE_URL = 'https://docs.google.com/document/d/1eVdtf7fpChQl7dKic-qI-BFjNtSGkAbQ' # база знаний
+KNOWLEDGE_BASE_URL = 'https://docs.google.com/document/d/1lWUDP5LVlxXb5jU2XxjbgrqYhyvqtr_i/' # база знаний
 print(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
 def load_document_text(url: str) -> str:
