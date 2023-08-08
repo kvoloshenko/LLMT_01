@@ -34,3 +34,12 @@ API_KEY = '???' # Open AI API Key
 Chat Completions API: https://platform.openai.com/docs/guides/gpt/chat-completions-api
 
 Chat completions response format: https://platform.openai.com/docs/guides/gpt/chat-completions-response-format
+
+### Token Limit in GPT-3.5
+see https://www.scriptbyai.com/token-limit-openai-chatgpt/ 
+
+| Model| Max Tokens    |
+| :-----: | :---: | 
+| gpt-3.5-turbo| 4086 | 
+| gpt-3.5-turbo-0613| 4086 |
+| gpt-3.5-turbo-16k| 16384 |
