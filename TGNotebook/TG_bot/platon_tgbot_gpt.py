@@ -38,7 +38,6 @@ logging.info(f'TEXT_BEGINNING = {TEXT_BEGINNING}')
 TEXT_END = os.environ.get("TEXT_END")
 logging.info (f'TEXT_END = {TEXT_END}')
 
-print(f'os.environ.get("QUESTION_FILTER")={os.environ.get("QUESTION_FILTER")}')
 QUESTION_FILTER = os.environ.get("QUESTION_FILTER")
 if QUESTION_FILTER is None:
     QUESTION_FILTER = ""
