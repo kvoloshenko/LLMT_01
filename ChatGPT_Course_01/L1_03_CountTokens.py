@@ -4,7 +4,7 @@ import openai
 from dotenv import load_dotenv
 import tiktoken
 
-def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
+def num_tokens_from_messages(messages, model):
     """Возвращает количество токенов, используемых списком сообщений."""
     try:
         encoding = tiktoken.encoding_for_model(model) # Пытаемся получить кодировку для выбранной модели
@@ -42,7 +42,7 @@ messages = [
     {"role": "user", "content": "who won the f1 championship in 2021?"}
 ]
 
-print(f"{num_tokens_from_messages(messages, 'gpt-3.5-turbo-0301')} токенов использовано на вопрос")
+print(f"{num_tokens_from_messages(messages, LL_MODEL)} токенов использовано на вопрос")
 
 completion = openai.ChatCompletion.create(
     model=LL_MODEL,
