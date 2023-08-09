@@ -24,7 +24,8 @@ MESSAGE_CONTENT_S = '<mc>' + X_CDATA_S
 MESSAGE_CONTENT_E = X_CDATA_E + '</mc>'
 NUM_TOKENS_S = '<num_tokens>'
 NUM_TOKENS_E = '</num_tokens>'
-
+CHUNK_NUM_S = '<chunk_num>'
+CHUNK_NUM_E = '</chunk_num>'
 
 # Get the current date and time
 current_datetime = datetime.datetime.now()
@@ -89,6 +90,10 @@ splitter = CharacterTextSplitter(separator="\n", chunk_size=1024, chunk_overlap=
 
 for chunk in splitter.split_text(database):
     source_chunks.append(Document(page_content=chunk, metadata={}))
+
+chunk_num = len(source_chunks)
+print(f'chunk_num={chunk_num}')
+logging.info(f'{CHUNK_NUM_S}{chunk_num}{CHUNK_NUM_E}')
 
 # Инициализирум модель эмбеддингов
 embeddings = OpenAIEmbeddings()
