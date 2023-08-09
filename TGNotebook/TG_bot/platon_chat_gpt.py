@@ -103,7 +103,7 @@ embeddings = OpenAIEmbeddings()
 try:
     db = FAISS.from_documents(source_chunks, embeddings) # Создадим индексную базу из разделенных фрагментов текста
 except Exception as e: # обработка ошибок openai.error.RateLimitError
-    print(f'!!! External error, see log !!!')
+    print(f'!!! External error: {str(e)}')
     logging.error(f'!!! External error: {str(e)}')
 
 for chunk in source_chunks:  # Поиск слишком больших чанков
@@ -163,11 +163,15 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
     logging.info(f'{NUM_TOKENS_S}{num_tokens}{NUM_TOKENS_E}')
     print(f'num_tokens = {num_tokens}')
 
-    completion = openai.ChatCompletion.create(
-        model=LL_MODEL,
-        messages=messages,
-        temperature=temp
-    )
+    try:
+        completion = openai.ChatCompletion.create(
+            model=LL_MODEL,
+            messages=messages,
+            temperature=temp
+        )
+    except Exception as e:  # обработка ошибок openai.error.RateLimitError
+        print(f'!!! External error: {str(e)}')
+        logging.error(f'!!! External error: {str(e)}')
 
     answer = insert_newlines(completion.choices[0].message.content)
 
