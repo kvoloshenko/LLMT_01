@@ -161,3 +161,4 @@ cython_debug/
 /LLMT_01.env
 /TGNotebook/TG_bot/env
 /TGNotebook/TG_bot/Logs/
+/ChatGPT_Course_01/DB/faiss_index/
