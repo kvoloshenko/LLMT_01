@@ -79,19 +79,6 @@ async def text(update, context):
         print(f'reply_text: {reply_text}')
         print('-------------------')
 
-    # использованеи context
-
-    #time.sleep(5)
-    # УДАЛЕНИЕ сообщений
-    #                    update.message.chat_id - получаем сообщение и message_id получаем из переменной my_message
-    #await context.bot.deleteMessage(chat_id=update.message.chat_id, message_id=my_message.message_id)
-
-    # закрепление сообщений
-    # await context.bot.pin_chat_message(chat_id=update.message.chat_id, message_id=update.message.message_id)
-
-    # изменение описания бота
-    # await context.bot.set_my_short_description("Этот бот очень умный, добрый и красивый")
-
 
 def main():
 

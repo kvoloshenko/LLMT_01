@@ -98,8 +98,6 @@ logging.info(f'{CHUNK_NUM_S}{chunk_num}{CHUNK_NUM_E}')
 # Инициализирум модель эмбеддингов
 embeddings = OpenAIEmbeddings()
 
-
-
 try:
     db = FAISS.from_documents(source_chunks, embeddings) # Создадим индексную базу из разделенных фрагментов текста
 except Exception as e: # обработка ошибок openai.error.RateLimitError
@@ -111,6 +109,9 @@ for chunk in source_chunks:  # Поиск слишком больших чанк
         logging.warning(f'*** Слишком большой кусок! ***')
         logging.warning(f'chunk_len ={len(chunk.page_content)}')
         logging.warning(f'content ={chunk.page_content}')
+        print(f'*** Слишком большой кусок! ***')
+        print(f'chunk_len ={len(chunk.page_content)}')
+        print(f'content ={chunk.page_content}')
 
 # Функция, которая позволяет выводить ответ модели в удобочитаемом виде
 def insert_newlines(text: str, max_len: int = 170) -> str:
