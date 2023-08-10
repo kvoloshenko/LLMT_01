@@ -35,6 +35,18 @@ Chat Completions API: https://platform.openai.com/docs/guides/gpt/chat-completio
 
 Chat completions response format: https://platform.openai.com/docs/guides/gpt/chat-completions-response-format
 
+### Links to FAISS documentation:
+
+https://python.langchain.com/docs/integrations/vectorstores/faiss
+
+https://faiss.ai/
+
+### Links to LangChain documentation:
+
+https://python.langchain.com/docs/get_started/introduction.html
+
+
+
 ### Token Limit in GPT-3.5
 see https://www.scriptbyai.com/token-limit-openai-chatgpt/ 
 
