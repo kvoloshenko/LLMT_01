@@ -24,7 +24,6 @@ Step_3_TgBot.py
 ### Dimensions
 ![Dimensions_01_en.png](TGNotebook%2FDocs%2FDimensions_01_en.png)
 
-
 ### Structure of the .env file:
 TOKEN = '???'   # TG bot token
 
