@@ -8,7 +8,7 @@ from langchain.vectorstores import FAISS
 import openai
 from dotenv import load_dotenv
 import logging
-import datetime
+from datetime import datetime, timedelta, timezone
 import tiktoken
 
 # XML теги для лога
@@ -28,7 +28,7 @@ CHUNK_NUM_S = '<chunk_num>'
 CHUNK_NUM_E = '</chunk_num>'
 
 # Get the current date and time
-current_datetime = datetime.datetime.now()
+current_datetime = datetime.now(tz=timezone(timedelta(hours=3)))
 
 # Format the date and time as a string
 formatted_datetime = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
@@ -116,19 +116,6 @@ for chunk in source_chunks:  # Поиск слишком больших чанк
         print(f'chunk_len ={len(chunk.page_content)}')
         print(f'content ={chunk.page_content}')
 
-# Функция, которая позволяет выводить ответ модели в удобочитаемом виде
-def insert_newlines(text: str, max_len: int = 170) -> str:
-    words = text.split()
-    lines = []
-    current_line = ""
-    for word in words:
-        if len(current_line + " " + word) > max_len:
-            lines.append(current_line)
-            current_line = ""
-        current_line += " " + word
-    lines.append(current_line)
-    return " ".join(lines)
-
 def num_tokens_from_messages(messages, model):
     """Возвращает количество токенов, используемых списком сообщений."""
     try:
@@ -177,7 +164,7 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
         print(f'!!! External error: {str(e)}')
         logging.error(f'!!! External error: {str(e)}')
 
-    answer = insert_newlines(completion.choices[0].message.content)
+    answer = completion.choices[0].message.content
 
     return answer  # возвращает ответ
 
