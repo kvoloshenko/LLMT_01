@@ -45,7 +45,9 @@ https://faiss.ai/
 
 https://python.langchain.com/docs/get_started/introduction.html
 
+### Links to Embeddings documentation:
 
+https://platform.openai.com/docs/guides/embeddings/what-are-embeddings
 
 ### Token Limit in GPT-3.5
 see https://www.scriptbyai.com/token-limit-openai-chatgpt/ 

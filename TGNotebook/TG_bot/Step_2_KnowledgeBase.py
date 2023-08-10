@@ -67,19 +67,6 @@ embeddings = OpenAIEmbeddings()
 # Create an index db from separated text fragments
 db = FAISS.from_documents(source_chunks, embeddings)
 
-# A function that allows you to display the model's response in a human-readable form
-def insert_newlines(text: str, max_len: int = 170) -> str:
-    words = text.split()
-    lines = []
-    current_line = ""
-    for word in words:
-        if len(current_line + " " + word) > max_len:
-            lines.append(current_line)
-            current_line = ""
-        current_line += " " + word
-    lines.append(current_line)
-    return " ".join(lines)
-
 def answer_index(system, topic, index_db, temp=TEMPERATURE):
 
     # Search for relevant segments from the knowledge base
@@ -99,7 +86,7 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
         temperature=temp
     )
 
-    answer = insert_newlines(completion.choices[0].message.content)
+    answer = completion.choices[0].message.content
 
     return answer
 
