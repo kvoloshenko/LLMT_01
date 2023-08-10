@@ -46,15 +46,18 @@ openai.api_key = API_KEY
 logging.info(LOG_S)
 LL_MODEL = os.environ.get("LL_MODEL") # модель
 logging.info(f'LL_MODEL = {LL_MODEL}')
+print(f'LL_MODEL = {LL_MODEL}')
 
 CHUNK_SIZE = int(os.environ.get("CHUNK_SIZE")) # Количество токинов в  чанке
 logging.info(f'CHUNK_SIZE={CHUNK_SIZE}')
+print(f'CHUNK_SIZE={CHUNK_SIZE}')
 
 NUMBER_RELEVANT_CHUNKS = int(os.environ.get("NUMBER_RELEVANT_CHUNKS"))   # Количество релевантных чанков
 logging.info(f'NUMBER_RELEVANT_CHUNKS={NUMBER_RELEVANT_CHUNKS}')
 
 TEMPERATURE = float(os.environ.get("TEMPERATURE")) # Температура модели
 logging.info(f'TEMPERATURE={TEMPERATURE}')
+print(f'TEMPERATURE={TEMPERATURE}')
 
 SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
 logging.info(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
