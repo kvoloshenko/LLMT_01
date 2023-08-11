@@ -49,11 +49,11 @@ def load_document_text(url: str) -> str:
 
 # Instruction for GPT to be sent to system
 system = load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
-print(f'PROMPT={system}')
+# print(f'PROMPT={system}')
 
 # Knowledge base to be sent into LangChain
 database = load_document_text(KNOWLEDGE_BASE_URL)  # Загрузка файла с Базой Знаний
-print(f'KNOWLEDGE={database}')
+# print(f'KNOWLEDGE={database}')
 
 source_chunks = []
 splitter = CharacterTextSplitter(separator="\n", chunk_size=1024, chunk_overlap=0)

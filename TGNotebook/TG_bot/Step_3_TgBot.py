@@ -12,8 +12,6 @@ print(f'TEXT_BEGINNING = {TEXT_BEGINNING}')
 TEXT_END = '*** Check the information with the manager! ***'
 print (f'TEXT_END = {TEXT_END}')
 
-QUESTION_FILTER = '@userVccTest01bot'
-
 # command function /start
 async def start(update, context):
   await update.message.reply_text('Hi! This is the update_context bot.')
@@ -30,19 +28,16 @@ async def text(update, context):
     print(f'text: {update.message.text}')
 
     topic = update.message.text
-    question_filter_len = len (QUESTION_FILTER)
-    topic_first_n = topic[:question_filter_len]
 
     chat_type = update.message.chat.type
 
-    if (QUESTION_FILTER == topic_first_n) or (chat_type == 'private'):
-        reply_text = chat_gpt.answer_user_question(topic)
-        response = TEXT_BEGINNING + '\n'
-        response = response + reply_text + '\n' + TEXT_END
+    reply_text = chat_gpt.answer_user_question(topic)
+    response = TEXT_BEGINNING + '\n'
+    response = response + reply_text + '\n' + TEXT_END
 
-        my_message = await update.message.reply_text(f'{response}')
-        print(f'reply_text: {reply_text}')
-        print('-------------------')
+    my_message = await update.message.reply_text(f'{response}')
+    print(f'reply_text: {reply_text}')
+    print('-------------------')
 
 def main():
 
