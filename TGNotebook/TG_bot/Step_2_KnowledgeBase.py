@@ -56,7 +56,7 @@ database = load_document_text(KNOWLEDGE_BASE_URL)  # Загрузка файла
 # print(f'KNOWLEDGE={database}')
 
 source_chunks = []
-splitter = CharacterTextSplitter(separator="\n", chunk_size=1024, chunk_overlap=0)
+splitter = CharacterTextSplitter(separator="\n", chunk_size=CHUNK_SIZE, chunk_overlap=0)
 
 for chunk in splitter.split_text(database):
     source_chunks.append(Document(page_content=chunk, metadata={}))

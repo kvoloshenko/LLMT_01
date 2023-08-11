@@ -7,11 +7,6 @@ import Step_2_KnowledgeBase as chat_gpt
 load_dotenv()
 TOKEN = os.environ.get("TOKEN")
 
-TEXT_BEGINNING = '*** Bot is talking to you: ***'
-print(f'TEXT_BEGINNING = {TEXT_BEGINNING}')
-TEXT_END = '*** Check the information with the manager! ***'
-print (f'TEXT_END = {TEXT_END}')
-
 # command function /start
 async def start(update, context):
   await update.message.reply_text('Hi! This is the update_context bot.')
@@ -32,10 +27,8 @@ async def text(update, context):
     chat_type = update.message.chat.type
 
     reply_text = chat_gpt.answer_user_question(topic)
-    response = TEXT_BEGINNING + '\n'
-    response = response + reply_text + '\n' + TEXT_END
 
-    my_message = await update.message.reply_text(f'{response}')
+    await update.message.reply_text(f'{reply_text}')
     print(f'reply_text: {reply_text}')
     print('-------------------')
 
