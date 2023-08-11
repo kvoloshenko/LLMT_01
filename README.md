@@ -2,6 +2,11 @@
 
 ## Integration of Telegram bot and ChatGPT
 
+### Structure of the .env file:
+TOKEN = '???'   # TG bot token
+
+API_KEY = '???' # Open AI API Key
+
 ### Step 1: Simple Request
 Step_1_SimpleRequest.py
 
@@ -24,10 +29,7 @@ Step_3_TgBot.py
 ### Dimensions
 ![Dimensions_01_en.png](TGNotebook%2FDocs%2FDimensions_01_en.png)
 
-### Structure of the .env file:
-TOKEN = '???'   # TG bot token
 
-API_KEY = '???' # Open AI API Key
 
 ### Links to openai documentation:
 
