@@ -24,8 +24,6 @@ async def text(update, context):
 
     topic = update.message.text
 
-    chat_type = update.message.chat.type
-
     reply_text = chat_gpt.answer_user_question(topic)
 
     await update.message.reply_text(f'{reply_text}')
