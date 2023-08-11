@@ -24,7 +24,7 @@ print(f'CHUNK_SIZE={CHUNK_SIZE}')
 NUMBER_RELEVANT_CHUNKS = 5  # Number of relevant chunks
 print(f'NUMBER_RELEVANT_CHUNKS={NUMBER_RELEVANT_CHUNKS}')
 
-TEMPERATURE = 1 # Model temperature
+TEMPERATURE = 0.5 # Model temperature
 print(f'TEMPERATURE={TEMPERATURE}')
 
 SYSTEM_DOC_URL = 'https://docs.google.com/document/d/1eW_hbYfvLM38n4X5nc6u9oEaV4wuPeio' # Prompt
