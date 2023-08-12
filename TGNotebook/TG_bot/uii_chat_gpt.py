@@ -24,14 +24,14 @@ print(f'CHUNK_SIZE={CHUNK_SIZE}')
 NUMBER_RELEVANT_CHUNKS = 5  # Количество релевантных чанков
 print(f'NUMBER_RELEVANT_CHUNKS={NUMBER_RELEVANT_CHUNKS}')
 
-TEMPERATURE = 0.5 # Температура модели
+TEMPERATURE = 1 # Температура модели
 print(f'TEMPERATURE={TEMPERATURE}')
 
 # Промптt
-SYSTEM_DOC_URL = 'https://docs.google.com/document/d/1eW_hbYfvLM38n4X5nc6u9oEaV4wuPeio'
+SYSTEM_DOC_URL = 'https://docs.google.com/document/d/14fKvev1HMdCe8StJGYuVnFwCIgxu0Pnu'
 print(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
 # База знаний
-KNOWLEDGE_BASE_URL = 'https://docs.google.com/document/d/1LgPsHoy3YA2wfnKRjW05a1_NztZVcdH7'
+KNOWLEDGE_BASE_URL = 'https://docs.google.com/document/d/1-JNOoO2og_WPUaAcBF7e10vL3JKuuv_e'
 print(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
 def load_document_text(url: str) -> str:

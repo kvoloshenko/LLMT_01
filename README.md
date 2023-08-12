@@ -1,5 +1,5 @@
 # Создание Telegram-ботов с ChatGPT
-Версия для Антикафе Мансарда 
+Версия для Антикафе  
 
 ## Предварительные действия:
 
@@ -8,14 +8,14 @@
 
 ## Integration of Telegram bot and ChatGPT
 
-## Пример для Антикафе Мансарда:
+## Пример для Антикафе (публичная выерсия):
 
 ![](TGNotebook/Docs/МансардаПример_01.png)
 ## Как это работает:
 
 ![](TGNotebook/Docs/IntegrationTG-botChatGPT_03_ru.png)
 
-Video explanation in Russian see here:  https://youtu.be/8rKedN9tiuo
+Видео см. здесь:  https://youtu.be/8rKedN9tiuo
 
 
 ### Структура файла .env
@@ -23,7 +23,7 @@ TOKEN = '???'   # TG bot token
 
 API_KEY = '???' # Open AI API Key
 
-### Links to openai documentation:
+### См. более подробно здесь описание OpenAI API:
 
 Chat Completions API: https://platform.openai.com/docs/guides/gpt/chat-completions-api
 

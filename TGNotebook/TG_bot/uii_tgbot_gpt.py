@@ -34,7 +34,7 @@ def main():
 
     # Точка входа в приложение
     application = Application.builder().token(TOKEN).build()
-    print('Bot started!')
+    print('Бот запущен!')
     # print(LOG_S)
 
     # Добавляем обработчик команды /start
@@ -46,7 +46,7 @@ def main():
     # Запуск приложения (для остановки нужно нажать Ctrl-C)
     application.run_polling()
 
-    print('Bot stopped!')
+    print('Бот остановлен!')
 
 
 if __name__ == "__main__":
