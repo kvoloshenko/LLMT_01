@@ -3,17 +3,17 @@ from dotenv import load_dotenv
 import os
 import uii_chat_gpt as chat_gpt
 
-# Loading values from .env file
+# Загружаем значеняи из файла .env
 load_dotenv()
 TOKEN = os.environ.get("TOKEN")
 
-# command function /start
+# Функция команды /start
 async def start(update, context):
   await update.message.reply_text('Hi! This is the update_context bot.')
 
-# Function for text messages
+# Функция для текстовых сообщений
 async def text(update, context):
-    # Use update
+    # Использование update
     print('-------------------')
     print(f'update: {update}')
     print(f'date: {update.message.date}')
@@ -32,18 +32,18 @@ async def text(update, context):
 
 def main():
 
-    # Application entry point
+    # Точка входа в приложение
     application = Application.builder().token(TOKEN).build()
     print('Bot started!')
     # print(LOG_S)
 
-    # Add handler for the command /start
+    # Добавляем обработчик команды /start
     application.add_handler(CommandHandler("start", start))
 
-    # Add a text message handler
+    # Добавляем обработчик текстовых сообщений
     application.add_handler(MessageHandler(filters.TEXT, text))
 
-    # Launching the application (to stop you need to press Ctrl-C)
+    # Запуск приложения (для остановки нужно нажать Ctrl-C)
     application.run_polling()
 
     print('Bot stopped!')
