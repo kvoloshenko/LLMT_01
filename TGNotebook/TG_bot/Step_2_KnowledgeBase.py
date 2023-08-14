@@ -48,11 +48,11 @@ def load_document_text(url: str) -> str:
     return text
 
 # Instruction for GPT to be sent to system
-system = load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
+system = load_document_text(SYSTEM_DOC_URL)  # Download file with Promt
 # print(f'PROMPT={system}')
 
 # Knowledge base to be sent into LangChain
-database = load_document_text(KNOWLEDGE_BASE_URL)  # Загрузка файла с Базой Знаний
+database = load_document_text(KNOWLEDGE_BASE_URL)  # Download file with Knowledge Base
 # print(f'KNOWLEDGE={database}')
 
 source_chunks = []
