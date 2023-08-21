@@ -10,6 +10,7 @@ openai.api_key = API_KEY
 
 # LLM: gpt-3.5-turbo-0613, gpt-3.5-turbo-0301, gpt-3.5-turbo-16k, gpt-3.5-turbo
 LL_MODEL = "gpt-3.5-turbo-0613"
+# LL_MODEL = 'gpt-4'
 print(f'LL_MODEL = {LL_MODEL}')
 
 # Interact with the OpenAI API
