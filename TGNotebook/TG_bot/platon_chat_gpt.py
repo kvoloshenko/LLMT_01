@@ -72,11 +72,24 @@ def load_document_text(url: str) -> str:
     if match_ is None:
         raise ValueError('Invalid Google Docs URL')
     doc_id = match_.group(1)
+    # print (f'doc_id={doc_id}')
+    text = ''
 
-    # Download the document as plain text
-    response = requests.get(f'https://docs.google.com/document/d/{doc_id}/export?format=txt')
-    response.raise_for_status()
-    text = response.text
+    try:
+        # Download the document as plain text
+        response = requests.get(f'https://docs.google.com/document/d/{doc_id}/export?format=txt')
+        response.raise_for_status()
+        if 'text/plain' in response.headers['Content-Type']:
+            # print('Правильный доступ!')
+            text = response.text
+        else:
+            raise ValueError('Invalid Google Docs URL')
+            print('Нет доступа к документу анонимным пользователям')
+            logging.error(f'!!! No access to the document by anonymous users !!!')
+
+    except Exception as e:  # обработка ошибок requests.exceptions.HTTPError: 404 Client Error: Not Found for url
+        print(f'!!! load_document_text error: {str(e)}')
+        logging.error(f'!!! load_document_text error: {str(e)}')
 
     return text
 
