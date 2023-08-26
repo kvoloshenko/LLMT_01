@@ -73,7 +73,7 @@ async def text(update, context):
     logging.info(f'{USER_ID_S}{update.message.from_user.id}{USER_ID_E}')
     logging.info(f'{MESSAGE_TEXT_S}{update.message.text}{MESSAGE_TEXT_E}')
     print('-------------------')
-    print(f'update: {update}')
+    # print(f'update: {update}')
     print(f'date: {update.message.date}')
     print(f'id message: {update.message.message_id}')
     print(f'name: {update.message.from_user.first_name}')
