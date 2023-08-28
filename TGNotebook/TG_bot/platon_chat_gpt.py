@@ -60,9 +60,11 @@ logging.info(f'TEMPERATURE={TEMPERATURE}')
 print(f'TEMPERATURE={TEMPERATURE}')
 
 SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
+print(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
 logging.info(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
 
 KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
+print(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
 
