@@ -59,3 +59,4 @@ C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot\venv\Scripts\python.exe C:\TGN
 
 12. Запускаем TG bot
 C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot\venv\Scripts\python.exe C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot\platon_tgbot_gpt.py
+Для останови нажмите клавиши Cntrl+C
