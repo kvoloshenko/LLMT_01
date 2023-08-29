@@ -1,0 +1,55 @@
+Установка на минималках под Windows
+
+1. Какая у вас операционка? У меня Windows 10. Все дальнейшие шаги для Windows.
+2. Какая версия Python? У меня 3.10.9. Выполните:
+python.exe -V
+
+3. Какая версия PIP у вас? У меня 23.2.1 Выполните
+py -m pip --version
+При необходимости обновите PIP, выполнив:
+py -m pip install pip --upgrade
+
+4. Создайте папку, например: C:\TGNotebook_04, выполнив
+MD C:\TGNotebook_04
+
+5. Идем на GitHub, https://github.com/kvoloshenko/LLMT_01/tree/Platon
+Скачиваем архив и распаковываем его в папку C:\TGNotebook_04
+Смотрим состав распакованных файлов
+
+6. Переходим в папку TG_bot
+CD C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot
+Смотрим состав файлов
+
+7. Создайте в этой папке окружение, выполнив:
+virtualenv venv
+Проверяем наличие папки:
+C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot\venv
+
+8. Переходим в папку Scripts
+CD C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot\venv\Scripts
+Активируйте окружение, запустив:
+activate.bat
+Вы должны увидеть строку приглашения вида:
+(venv) C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot\venv\Scripts>
+
+9. Установите в окружение все зависимости выполнив:
+pip install -r C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\requirements.txt
+Если были ошибки, то вероятно нужно предварительно установить С++, для этого можно скачать vs_BuildTools.exe и выполнив установку, например, как показано на скришоте
+https://github.com/kvoloshenko/LLMT_01/blob/main/TGNotebook/Docs/msc_06_office.png
+после этого перегрузить комп, и снова выполнить
+pip install -r C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\requirements.txt
+
+10. В папке C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot
+переименовываем файл ‘env_example.txt’ в ‘.env’
+Редактируем файл ‘.env’ изменяя строки, вписывая вместо ‘????’ необходимые значения
+TOKEN = '???'        # Токен TG Bot-a
+API_KEY = '???' # Open AI API Key
+
+11. Выполняем тестовый запуск:
+Переходим в папку
+cd C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot
+Запускаем тест
+C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot\venv\Scripts\python.exe C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot\platon_chat_test.py
+
+12. Запускаем TG bot
+C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot\venv\Scripts\python.exe C:\TGNotebook_04\LLMT_01-Platon\TGNotebook\TG_bot\platon_tgbot_gpt.py
