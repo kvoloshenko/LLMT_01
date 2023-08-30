@@ -37,7 +37,8 @@ https://github.com/kvoloshenko/LLMT_01/blob/main/TGNotebook/Docs/msc_06_office.p
 после этого перегрузить комп, и снова выполнить
 pip install -r C:\_Proj\LLMT_01\TGNotebook\requirements.txt
 
-9. Проверяем наличие установленных библиотек
+9. Проверяем наличие установленных библиотек 
+и переходим на ветку Platon
 
 10. В папке C:\_Proj\LLMT_01\TGNotebook\TG_bot
 переименовываем файл ‘env_example.txt’ в ‘.env’
