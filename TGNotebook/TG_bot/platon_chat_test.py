@@ -33,32 +33,17 @@ logging.info(f'TEXT_BEGINNING = {TEXT_BEGINNING}')
 TEXT_END = os.environ.get("TEXT_END")
 logging.info (f'TEXT_END = {TEXT_END}')
 
-QUESTION_FILTER = os.environ.get("QUESTION_FILTER")
-if QUESTION_FILTER is None:
-    QUESTION_FILTER = ""
-
-def split_text(text, max_length): # функция разбиения сроки на части переводом коретки
-    words = text.split()  # Разделяем строку на слова
-    result = []  # Список для результата
-
-    current_line = ""  # Текущая строка
-    for word in words:
-        if len(current_line) + len(word) <= max_length:  # Если добавление слова не превышает максимальную длину
-            current_line += word + " "  # Добавляем слово и пробел к текущей строке
-        else:
-            result.append(current_line.strip())  # Добавляем текущую строку в результат без лишних пробелов
-            current_line = word + " "  # Начинаем новую строку с текущим словом
-
-    if current_line:  # Если осталась незавершенная строка
-        result.append(current_line.strip())  # Добавляем незавершенную строку в результат
-
-    return '\n'.join(result)  # Возвращаем результат, объединяя строки символом перевода строки
+KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
+print(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
 def main():
+
     topic = 'Привет! Ты кто?'
     print(f'topic={topic}')
     logging.info(f'{MESSAGE_TEXT_S}{topic}{MESSAGE_TEXT_E}')
-    reply_text = chat_gpt.answer_user_question(topic)
+    ba = '0001'
+    db, db_file_name = chat_gpt.create_db(KNOWLEDGE_BASE_URL, '0001')
+    reply_text, num_tokens, messages, completion = chat_gpt.chat_question(topic, ba)
     response = TEXT_BEGINNING + '\n'
     response = response + reply_text + '\n' + TEXT_END
     print(f'response={response}')

@@ -63,9 +63,9 @@ SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
 print(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
 logging.info(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
 
-KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
-print(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
-logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
+# KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
+# print(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
+# logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
 
 def load_document_text(url: str) -> str:
@@ -99,37 +99,48 @@ def load_document_text(url: str) -> str:
 system = load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
 logging.info(f'{PROMPT_S}{system}{PROMPT_E}')
 
-# База знаний, которая будет подаваться в LangChain
-database = load_document_text(KNOWLEDGE_BASE_URL)  # Загрузка файла с Базой Знаний
-logging.info(f'{KNOWLEDGE_DB_S}{database}{KNOWLEDGE_DB_E}')
+def create_db(knowledge_base_url, ba):
+    db_file_name = 'db_file_' + ba
+    # База знаний, которая будет подаваться в LangChain
+    database = load_document_text(knowledge_base_url)  # Загрузка файла с Базой Знаний
+    logging.info(f'{KNOWLEDGE_DB_S}{database}{KNOWLEDGE_DB_E}')
 
-source_chunks = []
-splitter = CharacterTextSplitter(separator="\n", chunk_size=CHUNK_SIZE, chunk_overlap=0)
+    source_chunks = []
+    splitter = CharacterTextSplitter(separator="\n", chunk_size=CHUNK_SIZE, chunk_overlap=0)
 
-for chunk in splitter.split_text(database):
-    source_chunks.append(Document(page_content=chunk, metadata={}))
+    for chunk in splitter.split_text(database):
+        source_chunks.append(Document(page_content=chunk, metadata={}))
 
-chunk_num = len(source_chunks)
-print(f'chunk_num={chunk_num}')
-logging.info(f'{CHUNK_NUM_S}{chunk_num}{CHUNK_NUM_E}')
+    chunk_num = len(source_chunks)
+    print(f'chunk_num={chunk_num}')
+    logging.info(f'{CHUNK_NUM_S}{chunk_num}{CHUNK_NUM_E}')
 
-# Инициализирум модель эмбеддингов
-embeddings = OpenAIEmbeddings()
+    # Инициализирум модель эмбеддингов
+    embeddings = OpenAIEmbeddings()
 
-try:
-    db = FAISS.from_documents(source_chunks, embeddings) # Создадим индексную базу из разделенных фрагментов текста
-except Exception as e: # обработка ошибок openai.error.RateLimitError
-    print(f'!!! External error: {str(e)}')
-    logging.error(f'!!! External error: {str(e)}')
+    try:
+        db = FAISS.from_documents(source_chunks, embeddings) # Создадим индексную базу из разделенных фрагментов текста
+        db.save_local(db_file_name)
+    except Exception as e: # обработка ошибок openai.error.RateLimitError
+        print(f'!!! External error: {str(e)}')
+        logging.error(f'!!! External error: {str(e)}')
 
-for chunk in source_chunks:  # Поиск слишком больших чанков
-    if len(chunk.page_content) > CHUNK_SIZE:
-        logging.warning(f'*** Слишком большой кусок! ***')
-        logging.warning(f'chunk_len ={len(chunk.page_content)}')
-        logging.warning(f'content ={chunk.page_content}')
-        print(f'*** Слишком большой кусок! ***')
-        print(f'chunk_len ={len(chunk.page_content)}')
-        print(f'content ={chunk.page_content}')
+    for chunk in source_chunks:  # Поиск слишком больших чанков
+        if len(chunk.page_content) > CHUNK_SIZE:
+            logging.warning(f'*** Слишком большой кусок! ***')
+            logging.warning(f'chunk_len ={len(chunk.page_content)}')
+            logging.warning(f'content ={chunk.page_content}')
+            print(f'*** Слишком большой кусок! ***')
+            print(f'chunk_len ={len(chunk.page_content)}')
+            print(f'content ={chunk.page_content}')
+    return db, db_file_name
+
+def load_db(db_file_name):
+    # Инициализирум модель эмбеддингов
+    embeddings = OpenAIEmbeddings()
+    new_db = FAISS.load_local(db_file_name, embeddings)
+    return new_db
+
 
 def num_tokens_from_messages(messages, model):
     """Возвращает количество токенов, используемых списком сообщений."""
@@ -167,6 +178,7 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
 
     num_tokens = num_tokens_from_messages(messages, LL_MODEL)
     logging.info(f'{NUM_TOKENS_S}{num_tokens}{NUM_TOKENS_E}')
+    # print(f'messages = {messages}')
     print(f'num_tokens = {num_tokens}')
 
     try:
@@ -180,16 +192,22 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
         logging.error(f'!!! External error: {str(e)}')
 
     answer = completion.choices[0].message.content
+    # print(f'answer = {answer}')
 
-    return answer  # возвращает ответ
+    return answer, num_tokens, messages, completion   # возвращает ответ
 
 
-def answer_user_question(topic):
-    ans = answer_index(system, topic, db)  # получите ответ модели
-    return ans
+def chat_question(topic, ba):
+    db_file_name = 'db_file_' + ba
+    db = load_db(db_file_name)
+    ans, num_tokens, messages, completion = answer_index(system, topic, db)  # получите ответ модели
+    return ans, num_tokens, messages, completion
 
 def do_test(topic):
-    ans = answer_user_question(topic)
+    KNOWLEDGE_BASE_URL = 'https://docs.google.com/document/d/1-v4TCNmZyvgGbEInifI6SLHeienOoZZn'  # База знаний демо
+    ba = '0001'
+    db, db_file_name = create_db(KNOWLEDGE_BASE_URL, '0001')
+    ans, num_tokens, messages, completion = chat_question(topic, ba)
     return ans
 
 if __name__ == '__main__':

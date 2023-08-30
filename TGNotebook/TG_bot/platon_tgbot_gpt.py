@@ -42,6 +42,11 @@ QUESTION_FILTER = os.environ.get("QUESTION_FILTER")
 if QUESTION_FILTER is None:
     QUESTION_FILTER = ""
 
+KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
+print(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
+logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
+ba = '0001'
+db, db_file_name = chat_gpt.create_db(KNOWLEDGE_BASE_URL, '0001')
 
 def split_text(text, max_length): # функция разбиения сроки на части переводом коретки
     words = text.split()  # Разделяем строку на слова
@@ -88,7 +93,7 @@ async def text(update, context):
     chat_type = update.message.chat.type
 
     if (QUESTION_FILTER == topic_first_n) or (chat_type == 'private'):
-        reply_text = chat_gpt.answer_user_question(topic)
+        reply_text, num_tokens, messages, completion = chat_gpt.chat_question(topic, ba)
         response = TEXT_BEGINNING + '\n'
         response = response + reply_text + '\n' + TEXT_END
 
