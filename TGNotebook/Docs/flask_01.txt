@@ -1,0 +1,7 @@
+POST
+localhost:5000/create_db
+{"knowledge_base_url" : "https://docs.google.com/document/d/1-v4TCNmZyvgGbEInifI6SLHeienOoZZn", "ba" : "ba001"}
+
+POST
+localhost:5000/chat
+{"topic" : "Привет! Скидки есть?", "ba" : "ba001"}
