@@ -1,0 +1,52 @@
+
+0. Предварительные действия:
+Зарегистрировать свой TG bot c помощью @BotFather и получить TOKEN.
+Получить Open AI API_KEY
+PyCharm Community Edition
+Git
+
+1. Какая у вас операционка? У меня Windows 10. Все дальнейшие шаги для Windows.
+
+2. Какая версия Python? У меня 3.10.9. Выполните: 
+python.exe -V
+
+3. У вас должны быть установлены 
+PyCharm Community Edition
+Git
+
+4. Идем на GitHub, https://github.com/kvoloshenko/LLMT_01
+
+5. Запускаем PyCharm и создаем новый проект Get from VCS 
+указывая ссылку https://github.com/kvoloshenko/LLMT_01
+указываем папку для установки: C:\_Proj\LLMT_01
+
+
+6. Создайте окружение venv 
+
+7. Переходим в папку Scripts
+CD C:\_Proj\LLMT_01\TGNotebook\TG_bot\venv\Scripts
+Активируйте окружение, запустив:
+activate.bat
+Вы должны увидеть строку приглашения вида:
+(venv) C:\_Proj\LLMT_01\TGNotebook\TG_bot\venv\Scripts>
+
+8. Установите в окружение все зависимости выполнив:
+pip install -r C:\_Proj\LLMT_01\TGNotebook\requirements.txt 
+Если были ошибки, то вероятно нужно предварительно установить С++, для этого можно скачать vs_BuildTools.exe и выполнив установку, например, как показано на скришоте
+https://github.com/kvoloshenko/LLMT_01/blob/main/TGNotebook/Docs/msc_06_office.png
+после этого перегрузить комп, и снова выполнить
+pip install -r C:\_Proj\LLMT_01\TGNotebook\requirements.txt
+
+9. Проверяем наличие установленных библиотек
+
+10. В папке C:\_Proj\LLMT_01\TGNotebook\TG_bot
+переименовываем файл ‘env_example.txt’ в ‘.env’
+Редактируем файл ‘.env’ изменяя строки, вписывая вместо ‘????’ необходимые значения 
+TOKEN = '???'        # Токен TG Bot-a
+API_KEY = '???' # Open AI API Key
+
+11. Выполняем тестовый запуск: 
+platon_chat_test.py
+
+12. Запускаем TG bot:
+platon_tgbot_gpt.py
