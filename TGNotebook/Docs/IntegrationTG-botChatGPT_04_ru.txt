@@ -1,5 +1,5 @@
 @startuml
-title "Интеграция Битрикс24 и ChatGPT"
+title "Bot Factory"
 hide footbox
 
 
