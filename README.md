@@ -1,37 +1,47 @@
-# Создание Telegram-ботов с ChatGPT
-Версия для Антикафе Мансарда 
+# Bot Factory with ChatGPT
 
 ## Предварительные действия:
 
-1. Зарегистрировать свой TG bot c помощью @BotFather и получить TOKEN.
-![BotFather_01.png](TGNotebook%2FDocs%2FBotFather_01.png)
+1. Получить Open AI API_KEY
 
-2. Получить Open AI API_KEY
-
-## Integration of Telegram bot and ChatGPT
-
-## Пример для Антикафе Мансарда:
-
-![](TGNotebook/Docs/МансардаПример_01.png)
 ## Как это работает:
+Данная реализация предназначена для создания инфраструктуры предоставления услуги chat-bot для клиентов платформы. Каждый клиент имеет один или более billing accounts (ba). У каждого ba свой экземпляр Базы знаний.
 
-![](TGNotebook/Docs/IntegrationTG-botChatGPT_03_ru.png)
+Рассматриваются следующие сценарии:
 
-![Dimensions_01_en.png](TGNotebook%2FDocs%2FDimensions_01_en.png)
+### 1. POST create_db(knowledge_base_url, ba)
+где:
+* ba - значение билиннг аккаунта, для которого выполняются действия
+* knowledge_base_url - url к файлу с Базой знаний для концертного ba 
 
-Вот видео (8 минут) https://youtu.be/NkjkqsLCweQ
+#### Описание сценария: 
+Создать для ba свою векторную Базу Знаний на основании подготовленного файла. Сохранить векторную базу в файл.
 
-Вот преза: https://docs.google.com/presentation/d/1bo9T6LvS1CXjmT60hfaM4pRDcblufdAG/edit?usp=sharing&ouid=104673724125492337414&rtpof=true&sd=true
+![IntegrationTG-botChatGPT_04_ru_create_db.png](TGNotebook%2FDocs%2FIntegrationTG-botChatGPT_04_ru_create_db.png)
 
-## Минимальный комплект установки в среде Google
 
-Выполнять эти действия в браузере Google Chrome под своим аккаунтом в Google.
+### 2. POST chat(topic, ba)
+где:
+* ba - значение билиннг аккаунта, для которого выполняются действия
+* topic - текст вопроса от пользователя
 
-Нотебук установки: 
-https://drive.google.com/file/d/1-nw_ta_HZnrXAsfkJSVP50HpbanGfvRP/view?usp=sharing
+#### Описание сценария: 
+Получить запрос от ba, загрузить из файла векторную Базу Знаний. Найти релевантные чанки. Отправить данные в языковую модель ChatGPT, получить ответ от языковой модели.
 
-Видео запись установки:
-https://youtu.be/Qj_OSWLMhJg?si=RuA_iKS63P9NWta-
+![IntegrationTG-botChatGPT_04_ru_chat.png](TGNotebook%2FDocs%2FIntegrationTG-botChatGPT_04_ru_chat.png)
+
+### Видео (3 минуты)
+https://youtu.be/piCCkb1zIyw?si=EM-8EfVgZk1vnXNs
+
+### Теория
+
+#### Видео (8 минут) 
+https://youtu.be/NkjkqsLCweQ
+
+#### Презентация: 
+https://docs.google.com/presentation/d/1bo9T6LvS1CXjmT60hfaM4pRDcblufdAG/edit?usp=sharing&ouid=104673724125492337414&rtpof=true&sd=true
+
+
 
 ### Структура файла .env
 TOKEN = '???'   # TG bot token
