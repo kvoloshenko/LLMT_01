@@ -1,0 +1,23 @@
+@startuml
+title "Интеграция Битрикс24 и ChatGPT"
+hide footbox
+
+
+participant Application as s
+participant "Google Drive" as drive
+participant CharacterTextSplitter as splitter
+database    "Индексная DB" as db
+
+
+-> s : POST create_db(knowledge_base_url, ba)
+drive <- s: Загрузка файла с Базой Знаний
+s -> splitter: Разбиение Базы Знаний на чанки
+s <-- splitter: source_chunks
+s -> db: Создание индексной базы (source_chunks)
+db -> db: Перевод чанков Базы Знаний в эмбеддинги
+s -> db: save_local(ba)
+s <-- db: db_file
+<-- s : db_file
+
+
+@enduml

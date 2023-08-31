@@ -1,0 +1,30 @@
+@startuml
+title "Интеграция Битрикс24 и ChatGPT"
+hide footbox
+
+
+participant Application as s
+participant "Google Drive" as drive
+participant CharacterTextSplitter as splitter
+database    "Индексная DB" as db
+participant ChatGPT as chat
+
+-> s : POST chat(topic, ba)
+drive <- s: Загрузка файла с Промтом
+s -> db: load_local(ba, db_file)
+s -> db: Поиск релевантных чанков(topic, количество)
+s <-- db: message_content
+s -> chat: Запрос ChatGPT (Промт, message_content, температура)
+note right
+  Примечание:
+  * Промт определяет базовую
+  инструкцию для ChatGPT
+  * message_content содержит
+  вопрос и релевантные чанки
+  * Температура управляет степенью
+случайности выходных данных
+end note
+s <-- chat: ответ
+<-- s: ответ
+
+@enduml
