@@ -67,6 +67,9 @@ logging.info(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
 # print(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 # logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
+DB_DIR_NAME = os.environ.get("DB_DIR_NAME") # каталог для db
+print(f'DB_DIR_NAME = {DB_DIR_NAME}')
+logging.info(f'SDB_DIR_NAMEL = {DB_DIR_NAME}')
 
 def load_document_text(url: str) -> str:
     # Extract the document ID from the URL
@@ -100,7 +103,7 @@ system = load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с П
 logging.info(f'{PROMPT_S}{system}{PROMPT_E}')
 
 def create_db(knowledge_base_url, ba):
-    db_file_name = 'db_file_' + ba
+    db_file_name = DB_DIR_NAME + 'db_file_' + ba
     # База знаний, которая будет подаваться в LangChain
     database = load_document_text(knowledge_base_url)  # Загрузка файла с Базой Знаний
     logging.info(f'{KNOWLEDGE_DB_S}{database}{KNOWLEDGE_DB_E}')
@@ -198,7 +201,7 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
 
 
 def chat_question(topic, ba):
-    db_file_name = 'db_file_' + ba
+    db_file_name = DB_DIR_NAME + 'db_file_' + ba
     db = load_db(db_file_name)
     ans, num_tokens, messages, completion = answer_index(system, topic, db)  # получите ответ модели
     return ans, num_tokens, messages, completion

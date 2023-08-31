@@ -42,6 +42,8 @@ SYSTEM_DOC_URL = '???'          # Prompt
 
 KNOWLEDGE_BASE_URL = '????'     # Knowledge Base
 
+DB_DIR_NAME = "db/"             # db dir name
+
 TEMPERATURE = 1                 # Model temperature
 
 NUMBER_RELEVANT_CHUNKS = 5      # Number of relevant chunks
