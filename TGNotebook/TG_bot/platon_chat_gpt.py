@@ -115,7 +115,7 @@ def create_db(knowledge_base_url, ba):
         source_chunks.append(Document(page_content=chunk, metadata={}))
 
     chunk_num = len(source_chunks)
-    print(f'chunk_num={chunk_num}')
+    # print(f'chunk_num={chunk_num}')
     logging.info(f'{CHUNK_NUM_S}{chunk_num}{CHUNK_NUM_E}')
 
     # Инициализирум модель эмбеддингов
@@ -136,7 +136,7 @@ def create_db(knowledge_base_url, ba):
             print(f'*** Слишком большой кусок! ***')
             print(f'chunk_len ={len(chunk.page_content)}')
             print(f'content ={chunk.page_content}')
-    return db, db_file_name
+    return db, db_file_name, chunk_num
 
 def load_db(db_file_name):
     # Инициализирум модель эмбеддингов
@@ -182,7 +182,7 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
     num_tokens = num_tokens_from_messages(messages, LL_MODEL)
     logging.info(f'{NUM_TOKENS_S}{num_tokens}{NUM_TOKENS_E}')
     # print(f'messages = {messages}')
-    print(f'num_tokens = {num_tokens}')
+    # print(f'num_tokens = {num_tokens}')
 
     try:
         completion = openai.ChatCompletion.create(
@@ -209,7 +209,7 @@ def chat_question(topic, ba):
 def do_test(topic):
     KNOWLEDGE_BASE_URL = 'https://docs.google.com/document/d/1-v4TCNmZyvgGbEInifI6SLHeienOoZZn'  # База знаний демо
     ba = '0001'
-    db, db_file_name = create_db(KNOWLEDGE_BASE_URL, '0001')
+    db, db_file_name, chunk_num = create_db(KNOWLEDGE_BASE_URL, '0001')
     ans, num_tokens, messages, completion = chat_question(topic, ba)
     return ans
 
