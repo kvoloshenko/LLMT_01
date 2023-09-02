@@ -1,10 +1,6 @@
 import re
 import requests
 import os
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.docstore.document import Document
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
 import openai
 from dotenv import load_dotenv
 import logging
@@ -48,25 +44,13 @@ LL_MODEL = os.environ.get("LL_MODEL") # модель
 logging.info(f'LL_MODEL = {LL_MODEL}')
 print(f'LL_MODEL = {LL_MODEL}')
 
-CHUNK_SIZE = int(os.environ.get("CHUNK_SIZE")) # Количество токинов в  чанке
-logging.info(f'CHUNK_SIZE={CHUNK_SIZE}')
-print(f'CHUNK_SIZE={CHUNK_SIZE}')
-
-NUMBER_RELEVANT_CHUNKS = int(os.environ.get("NUMBER_RELEVANT_CHUNKS"))   # Количество релевантных чанков
-logging.info(f'NUMBER_RELEVANT_CHUNKS={NUMBER_RELEVANT_CHUNKS}')
-
 TEMPERATURE = float(os.environ.get("TEMPERATURE")) # Температура модели
 logging.info(f'TEMPERATURE={TEMPERATURE}')
 print(f'TEMPERATURE={TEMPERATURE}')
 
-SYSTEM_DOC_URL = os.environ.get("SYSTEM_DOC_URL") # промпт
-print(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
-logging.info(f'SYSTEM_DOC_URL = {SYSTEM_DOC_URL}')
-
-KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знаний
-print(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
-logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
-
+TATIANA_PROMPT_URL = os.environ.get("TATIANA_PROMPT_URL") # промпт
+print(f'TATIANA_PROMPT_URL = {TATIANA_PROMPT_URL}')
+logging.info(f'TATIANA_PROMPT_URL = {TATIANA_PROMPT_URL}')
 
 def load_document_text(url: str) -> str:
     # Extract the document ID from the URL
@@ -96,40 +80,8 @@ def load_document_text(url: str) -> str:
     return text
 
 # Инструкция для GPT, которая будет подаваться в system
-system = load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
+system = load_document_text(TATIANA_PROMPT_URL)  # Загрузка файла с Промтом
 logging.info(f'{PROMPT_S}{system}{PROMPT_E}')
-
-# База знаний, которая будет подаваться в LangChain
-database = load_document_text(KNOWLEDGE_BASE_URL)  # Загрузка файла с Базой Знаний
-logging.info(f'{KNOWLEDGE_DB_S}{database}{KNOWLEDGE_DB_E}')
-
-source_chunks = []
-splitter = CharacterTextSplitter(separator="\n", chunk_size=CHUNK_SIZE, chunk_overlap=0)
-
-for chunk in splitter.split_text(database):
-    source_chunks.append(Document(page_content=chunk, metadata={}))
-
-chunk_num = len(source_chunks)
-print(f'chunk_num={chunk_num}')
-logging.info(f'{CHUNK_NUM_S}{chunk_num}{CHUNK_NUM_E}')
-
-# Инициализирум модель эмбеддингов
-embeddings = OpenAIEmbeddings()
-
-try:
-    db = FAISS.from_documents(source_chunks, embeddings) # Создадим индексную базу из разделенных фрагментов текста
-except Exception as e: # обработка ошибок openai.error.RateLimitError
-    print(f'!!! External error: {str(e)}')
-    logging.error(f'!!! External error: {str(e)}')
-
-for chunk in source_chunks:  # Поиск слишком больших чанков
-    if len(chunk.page_content) > CHUNK_SIZE:
-        logging.warning(f'*** Слишком большой кусок! ***')
-        logging.warning(f'chunk_len ={len(chunk.page_content)}')
-        logging.warning(f'content ={chunk.page_content}')
-        print(f'*** Слишком большой кусок! ***')
-        print(f'chunk_len ={len(chunk.page_content)}')
-        print(f'content ={chunk.page_content}')
 
 def num_tokens_from_messages(messages, model):
     """Возвращает количество токенов, используемых списком сообщений."""
@@ -152,17 +104,12 @@ def num_tokens_from_messages(messages, model):
         raise NotImplementedError(f"""num_tokens_from_messages() is not presently implemented for model {model}. # вызываем ошибку, если функция не реализована для конкретной модели""")
 
 
-def answer_index(system, topic, index_db, temp=TEMPERATURE):
+def answer_index(system, topic, temp=TEMPERATURE):
 
-    # Поиск релевантных отрезков из базы знаний
-    docs = index_db.similarity_search(topic, k = NUMBER_RELEVANT_CHUNKS)
-
-    message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\n ===================== Отрывок документа №{i+1} =====================\n' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
-    logging.info(f'{MESSAGE_CONTENT_S}{message_content}{MESSAGE_CONTENT_E}')
 
     messages = [
         {"role": "system", "content": system},
-        {"role": "user", "content": f"Документ с информацией для ответа клиенту: {message_content}\n\n Вопрос клиента: \n{topic}"}
+        {"role": "user", "content": f"Исходный рекламный текст: {topic}"}
     ]
 
     num_tokens = num_tokens_from_messages(messages, LL_MODEL)
@@ -185,7 +132,7 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
 
 
 def answer_user_question(topic):
-    ans = answer_index(system, topic, db)  # получите ответ модели
+    ans = answer_index(system, topic)  # получите ответ модели
     return ans
 
 def do_test(topic):
@@ -193,7 +140,7 @@ def do_test(topic):
     return ans
 
 if __name__ == '__main__':
-    topic = 'Привет! Ты кто?'
+    topic = 'У нас лучшие в мире рубашки и трусы от заслуженных собаководов.'
     print(f'topic={topic}')
     response = do_test(topic)
     print(f'response={response}')

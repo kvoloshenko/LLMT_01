@@ -1,8 +1,7 @@
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from dotenv import load_dotenv
-import time
 import os
-import platon_chat_gpt as chat_gpt
+import tatiana_chat_gpt as chat_gpt
 import logging
 
 # XML теги для лога
@@ -31,16 +30,6 @@ load_dotenv()
 
 # загружаем значеняи из файла .env
 TOKEN = os.environ.get("TOKEN")
-
-TEXT_BEGINNING = os.environ.get("TEXT_BEGINNING")
-logging.info(f'TEXT_BEGINNING = {TEXT_BEGINNING}')
-
-TEXT_END = os.environ.get("TEXT_END")
-logging.info (f'TEXT_END = {TEXT_END}')
-
-QUESTION_FILTER = os.environ.get("QUESTION_FILTER")
-if QUESTION_FILTER is None:
-    QUESTION_FILTER = ""
 
 
 def split_text(text, max_length): # функция разбиения сроки на части переводом коретки
@@ -83,21 +72,15 @@ async def text(update, context):
     topic_splited = split_text(topic, 40) # Разбиени строки переводом коретки
     print(f'text: {topic_splited}')
 
-    question_filter_len = len (QUESTION_FILTER)
-    topic_first_n = topic[:question_filter_len]
 
     chat_type = update.message.chat.type
+    response = chat_gpt.answer_user_question(topic)
 
-    if (QUESTION_FILTER == topic_first_n) or (chat_type == 'private'):
-        reply_text = chat_gpt.answer_user_question(topic)
-        response = TEXT_BEGINNING + '\n'
-        response = response + reply_text + '\n' + TEXT_END
-
-        await update.message.reply_text(f'{response}')
-        reply_text_splited = split_text(reply_text, 40) # Разбиени строки переводом коретки
-        logging.info(f'{REPLY_TEXT_S}{reply_text_splited}{REPLY_TEXT_E}')
-        print(f'reply_text:\n{reply_text_splited}')
-        print('-------------------')
+    await update.message.reply_text(f'{response}')
+    reply_text_splited = split_text(response, 40) # Разбиени строки переводом коретки
+    logging.info(f'{REPLY_TEXT_S}{reply_text_splited}{REPLY_TEXT_E}')
+    print(f'reply_text:\n{reply_text_splited}')
+    print('-------------------')
 
 
 def main():
