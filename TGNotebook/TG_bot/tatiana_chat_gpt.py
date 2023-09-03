@@ -79,9 +79,6 @@ def load_document_text(url: str) -> str:
 
     return text
 
-# Инструкция для GPT, которая будет подаваться в system
-system = load_document_text(TATIANA_PROMPT_URL)  # Загрузка файла с Промтом
-logging.info(f'{PROMPT_S}{system}{PROMPT_E}')
 
 def num_tokens_from_messages(messages, model):
     """Возвращает количество токенов, используемых списком сообщений."""
@@ -104,8 +101,10 @@ def num_tokens_from_messages(messages, model):
         raise NotImplementedError(f"""num_tokens_from_messages() is not presently implemented for model {model}. # вызываем ошибку, если функция не реализована для конкретной модели""")
 
 
-def answer_index(system, topic, temp=TEMPERATURE):
-
+def answer_index(topic, temp=TEMPERATURE):
+    # Инструкция для GPT, которая будет подаваться в system
+    system = load_document_text(TATIANA_PROMPT_URL)  # Загрузка файла с Промтом
+    logging.info(f'{PROMPT_S}{system}{PROMPT_E}')
 
     messages = [
         {"role": "system", "content": system},
@@ -132,7 +131,7 @@ def answer_index(system, topic, temp=TEMPERATURE):
 
 
 def answer_user_question(topic):
-    ans = answer_index(system, topic)  # получите ответ модели
+    ans = answer_index(topic)  # получите ответ модели
     return ans
 
 def do_test(topic):
