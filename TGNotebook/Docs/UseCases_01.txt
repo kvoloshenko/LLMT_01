@@ -1,0 +1,19 @@
+@startuml
+
+"Bot User" as User
+"Bot Owner" as Owner
+
+Owner -right-> (create_db)
+User  -right->  (chat)
+
+note left of Owner : Billing account (ba).
+
+note "ba" as N1
+(create_db) .. N1
+N1 .. (chat)
+
+note "vector db" as N2
+(create_db) .. N2
+N2 .. (chat)
+
+@enduml
