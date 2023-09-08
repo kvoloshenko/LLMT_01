@@ -26,6 +26,11 @@ NUM_TOKENS_S = '<num_tokens>'
 NUM_TOKENS_E = '</num_tokens>'
 CHUNK_NUM_S = '<chunk_num>'
 CHUNK_NUM_E = '</chunk_num>'
+MESSAGES_S = '<messages>' + X_CDATA_S
+MESSAGES_E = X_CDATA_E + '</messages>'
+COMPLETION_S = '<completion>' + X_CDATA_S
+COMPLETION_E = X_CDATA_E + '</completion>'
+
 
 # Get the current date and time
 current_datetime = datetime.now(tz=timezone(timedelta(hours=3)))
@@ -157,14 +162,15 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
     # Поиск релевантных отрезков из базы знаний
     docs = index_db.similarity_search(topic, k = NUMBER_RELEVANT_CHUNKS)
 
-    message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\n ===================== Отрывок документа №{i+1} =====================\n' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
+    message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\n#### Document excerpt №{i+1}####\n' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
     logging.info(f'{MESSAGE_CONTENT_S}{message_content}{MESSAGE_CONTENT_E}')
 
     messages = [
         {"role": "system", "content": system},
-        {"role": "user", "content": f"Документ с информацией для ответа клиенту: {message_content}\n\n Вопрос клиента: \n{topic}"}
+        {"role": "user", "content": f"Here is the document with information to respond to the client: {message_content}\n\n Here is the client's question: \n{topic}"}
     ]
 
+    logging.info(f'{MESSAGES_S}{messages}{MESSAGES_E}')
     num_tokens = num_tokens_from_messages(messages, LL_MODEL)
     logging.info(f'{NUM_TOKENS_S}{num_tokens}{NUM_TOKENS_E}')
     print(f'num_tokens = {num_tokens}')
@@ -179,6 +185,7 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
         print(f'!!! External error: {str(e)}')
         logging.error(f'!!! External error: {str(e)}')
 
+    logging.info(f'{COMPLETION_S}{completion}{COMPLETION_E}')
     answer = completion.choices[0].message.content
 
     return answer  # возвращает ответ
