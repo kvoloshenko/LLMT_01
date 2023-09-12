@@ -2,7 +2,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from dotenv import load_dotenv
 import time
 import os
-import platon_chat_gpt as chat_gpt
+import сity_chat_gpt as chat_gpt
 import logging
 
 # XML теги для лога
@@ -73,23 +73,23 @@ async def text(update, context):
     logging.info(f'{USER_ID_S}{update.message.from_user.id}{USER_ID_E}')
     logging.info(f'{MESSAGE_TEXT_S}{update.message.text}{MESSAGE_TEXT_E}')
     print('-------------------')
-    # print(f'update: {update}')
+    print(f'update: {update}')
     print(f'date: {update.message.date}')
     print(f'id message: {update.message.message_id}')
     print(f'name: {update.message.from_user.first_name}')
     print(f'user.id: {update.message.from_user.id}')
+    print(f'text: {update.message.text}')
+
 
     topic = update.message.text
-    topic_splited = split_text(topic, 40) # Разбиени строки переводом коретки
-    print(f'text: {topic_splited}')
-
     question_filter_len = len (QUESTION_FILTER)
     topic_first_n = topic[:question_filter_len]
 
     chat_type = update.message.chat.type
 
     if (QUESTION_FILTER == topic_first_n) or (chat_type == 'private'):
-        reply_text = chat_gpt.answer_user_question(topic)
+        #reply_text = chat_gpt.answer_user_question(topic)
+        reply_text = 'все выключено, согласовывайте время тестирования с разработчиком'
         response = TEXT_BEGINNING + '\n'
         response = response + reply_text + '\n' + TEXT_END
 

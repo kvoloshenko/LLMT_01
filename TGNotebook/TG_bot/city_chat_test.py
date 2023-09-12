@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-import platon_chat_gpt as chat_gpt
+import сity_chat_gpt as chat_gpt
 import logging
 
 # XML теги для лога
@@ -55,10 +55,10 @@ def split_text(text, max_length): # функция разбиения сроки
     return '\n'.join(result)  # Возвращаем результат, объединяя строки символом перевода строки
 
 def main():
-    topic = 'Привет! Ты кто?'
+    topic = 'какая модель градостроительного зонирования ?'
     print(f'topic={topic}')
     logging.info(f'{MESSAGE_TEXT_S}{topic}{MESSAGE_TEXT_E}')
-    reply_text = chat_gpt.answer_user_question(topic)
+    reply_text, num_tokens, messages, completion= chat_gpt.chat_question(topic)
     response = TEXT_BEGINNING + '\n'
     response = response + reply_text + '\n' + TEXT_END
     print(f'response={response}')
