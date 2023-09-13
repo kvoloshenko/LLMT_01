@@ -59,7 +59,7 @@ def create_db(database, ba):
 
 if __name__ == '__main__':
     # База знаний, которая будет подаваться в LangChain
-    database = load_text('C:/_Proj/LLMT_01/TGNotebook/TG_bot/CityBuilder/gradkod_02.txt')
+    database = load_text('C:/_Proj/LLMT_01/TGNotebook/TG_bot/CityBuilder/gradkod_03.txt')
     ba = 'CityBuilder'
     db_file_name = 'db/db_file_ars'
     if not os.path.exists(db_file_name):
