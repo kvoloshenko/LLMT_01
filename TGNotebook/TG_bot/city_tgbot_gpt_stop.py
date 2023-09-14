@@ -1,8 +1,6 @@
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from dotenv import load_dotenv
-import time
 import os
-import сity_chat_gpt as chat_gpt
 import logging
 
 # XML теги для лога
@@ -78,10 +76,10 @@ async def text(update, context):
     print(f'id message: {update.message.message_id}')
     print(f'name: {update.message.from_user.first_name}')
     print(f'user.id: {update.message.from_user.id}')
-    print(f'text: {update.message.text}')
-
 
     topic = update.message.text
+    topic_splited = split_text(topic, 40)  # Разбиени строки переводом коретки
+    print(f'text: {topic_splited}')
     question_filter_len = len (QUESTION_FILTER)
     topic_first_n = topic[:question_filter_len]
 
