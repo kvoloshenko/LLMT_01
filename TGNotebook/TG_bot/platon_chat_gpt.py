@@ -39,6 +39,7 @@ current_datetime = datetime.now(tz=timezone(timedelta(hours=3)))
 formatted_datetime = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
 
 logfilename = "Logs/" + formatted_datetime + "_tgbot_gpt.xml"
+csvfilename = "Logs/" + formatted_datetime + "_answers.csv"
 logging.getLogger("faiss").setLevel(logging.ERROR)
 logging.basicConfig(level=logging.INFO, filename=logfilename,filemode="w")
 
@@ -72,6 +73,17 @@ KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знани�
 print(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
+# Функции для работы с файлом
+def write_to_file(file_data, file_name=csvfilename):
+    with open(file_name, 'w', encoding='utf-8') as file:
+        file.write(file_data)
+
+# Записывам в файл заголовок
+write_to_file('question;answer')
+
+def append_to_file(new_line, file_name=csvfilename):
+    with open(file_name, 'a', encoding='utf-8') as file:
+        file.write('\n' + new_line)
 
 def load_document_text(url: str) -> str:
     # Extract the document ID from the URL
@@ -187,6 +199,9 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
 
     logging.info(f'{COMPLETION_S}{completion}{COMPLETION_E}')
     answer = completion.choices[0].message.content
+
+    line_for_file = '"' + topic + '";"' + answer + '"'
+    append_to_file(line_for_file)
 
     return answer  # возвращает ответ
 
