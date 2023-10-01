@@ -1,6 +1,7 @@
 import re
 import requests
 import os
+import json
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.docstore.document import Document
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -10,6 +11,7 @@ from dotenv import load_dotenv
 import logging
 from datetime import datetime, timedelta, timezone
 import tiktoken
+import chat_function_01 as cf
 
 # XML теги для лога
 LOG_S = '<log>'
@@ -169,7 +171,8 @@ def num_tokens_from_messages(messages, model):
         raise NotImplementedError(f"""num_tokens_from_messages() is not presently implemented for model {model}. # вызываем ошибку, если функция не реализована для конкретной модели""")
 
 
-def answer_index(system, topic, index_db, temp=TEMPERATURE):
+# Запрос в ChatGPT с использованием функций
+def answer_function(system, topic, index_db, temp=TEMPERATURE):
 
     # Поиск релевантных отрезков из базы знаний
     docs = index_db.similarity_search(topic, k = NUMBER_RELEVANT_CHUNKS)
@@ -191,7 +194,9 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
         completion = openai.ChatCompletion.create(
             model=LL_MODEL,
             messages=messages,
-            temperature=temp
+            temperature=temp,
+            functions=cf.function_descriptions,   # Add function calling
+            function_call="auto"                  # specify the function call
         )
     except Exception as e:  # обработка ошибок openai.error.RateLimitError
         print(f'!!! External error: {str(e)}')
@@ -200,14 +205,54 @@ def answer_index(system, topic, index_db, temp=TEMPERATURE):
     logging.info(f'{COMPLETION_S}{completion}{COMPLETION_E}')
     answer = completion.choices[0].message.content
 
+    if completion.choices[0].finish_reason == "function_call":
+        function_answer = completion.choices[0].message
+        print(f'Сработала функция {function_answer.function_call.name} - нужно извлекать значения параметров функции')
+        # Извлекаем параметры функции
+        params = json.loads(function_answer.function_call.arguments)
+        print(f'params={params}')
+        # Используем вывод LLM для ручного вызова функции.
+        function_name = 'cf.'+function_answer.function_call.name
+        chosen_function = eval(function_name)
+        functionResult = chosen_function(**params)
+        print(functionResult)
+        answer, completion = answer_2(system, topic, message_content, function_answer, functionResult)
+    else:
+        print(f'Функции не было')
+        line_for_file = '"' + topic + '";"' + answer + '"'
+        append_to_file(line_for_file)
+
+    return answer, completion  # возвращает ответ
+
+# Второй вызов ChatGPT для обработки результатов выполнения функции
+def answer_2(system, topic, message_content, function_answer, functionResult, temp=TEMPERATURE):
+
+
+    messages = [
+        {"role": "system", "content": system},
+        {"role": "user", "content": f"Here is the document with information to respond to the client: {message_content}\n\n Here is the client's question: \n{topic}"},
+        {"role": "function", "name": function_answer.function_call.name, "content": functionResult}
+    ]
+
+    completion = openai.ChatCompletion.create(
+        model=LL_MODEL,
+        messages=messages,
+        temperature=temp,
+        functions=cf.function_descriptions,   # Add function calling
+        # function_call="auto"               # specify the function call
+    )
+
+    answer = completion.choices[0].message.content
+    print (f'completion={completion}')
+
     line_for_file = '"' + topic + '";"' + answer + '"'
     append_to_file(line_for_file)
 
-    return answer  # возвращает ответ
-
+    return answer, completion
 
 def answer_user_question(topic):
-    ans = answer_index(system, topic, db)  # получите ответ модели
+    ans, completion = answer_function(system, topic, db)  # получите ответ модели
+
     return ans
 
 def do_test(topic):
@@ -215,7 +260,8 @@ def do_test(topic):
     return ans
 
 if __name__ == '__main__':
-    topic = 'Привет! Ты кто?'
+    # topic = 'Привет! Ты кто?'
+    topic = 'Нас 20 человек, мы студенты, хотим прийти на четыре часа, посчитайте, плиз, сколько будет стоить?'
     print(f'topic={topic}')
     response = do_test(topic)
     print(f'response={response}')
