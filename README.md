@@ -4,6 +4,7 @@
 ## Предварительные действия:
 
 1. Зарегистрировать свой TG bot c помощью @BotFather и получить TOKEN.
+
 ![BotFather_01.png](TGNotebook%2FDocs%2FBotFather_01.png)
 
 2. Получить Open AI API_KEY
@@ -22,16 +23,6 @@
 Вот видео (8 минут) https://youtu.be/NkjkqsLCweQ
 
 Вот преза: https://docs.google.com/presentation/d/1bo9T6LvS1CXjmT60hfaM4pRDcblufdAG/edit?usp=sharing&ouid=104673724125492337414&rtpof=true&sd=true
-
-## Минимальный комплект установки в среде Google
-
-Выполнять эти действия в браузере Google Chrome под своим аккаунтом в Google.
-
-Нотебук установки: 
-https://drive.google.com/file/d/1-nw_ta_HZnrXAsfkJSVP50HpbanGfvRP/view?usp=sharing
-
-Видео запись установки:
-https://youtu.be/Qj_OSWLMhJg?si=RuA_iKS63P9NWta-
 
 ### Структура файла .env
 TOKEN = '???'   # TG bot token
