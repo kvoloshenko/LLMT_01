@@ -1,10 +1,16 @@
 import json
 
 # Функция вычисления стоимости услуги
-def ServiceCost(guestsNumber: int, minutesNumber: int, costPerMinute=4, stop_check=750 ) -> int:
-    cost_guest = costPerMinute * minutesNumber * guestsNumber
+def ServiceCost(guestsNumber: int,
+                minutesNumber: int,
+                studentsNumber=0,
+                costPerMinute=4,
+                stop_check=750,
+                discountStudent=0.15 ) -> int:
+    cost_students = costPerMinute * minutesNumber * studentsNumber * discountStudent
+    cost_guest = (costPerMinute * minutesNumber * (guestsNumber-studentsNumber)) + cost_students
     print(f'cost_guest={cost_guest}')
-    cost_stop = guestsNumber * stop_check
+    cost_stop = guestsNumber  * stop_check
     print(f'cost_stop={cost_stop}')
     min_cost = cost_stop if cost_stop < cost_guest else cost_guest
     return min_cost
@@ -19,7 +25,11 @@ function_descriptions = [
             "properties": {
                 "guests_number": {
                     "type": "integer",
-                    "description": "The number of guests, e.g. 7",
+                    "description": "Number of guests including students, e.g. 7",
+                },
+                "students_number": {
+                    "type": "integer",
+                    "description": "Number of students, e.g. 2",
                 },
                 "minutes_number": {
                     "type": "integer",
@@ -31,12 +41,13 @@ function_descriptions = [
     }
 ]
 
-def get_service_cost(guests_number, minutes_number):
+def get_service_cost(guests_number, minutes_number, students_number=0):
     """Calculate the cost of a service for a given number of guests per number of minutes"""
-    service_cost = ServiceCost(guests_number, minutes_number)
+    service_cost = ServiceCost(guests_number, minutes_number, students_number)
     # Output
     service_cost_info = {
         "guests_number": guests_number,
+        "students_number": students_number,
         "minutes_number": minutes_number,
         "service_cost": service_cost
     }
@@ -45,7 +56,7 @@ def get_service_cost(guests_number, minutes_number):
     return json.dumps(service_cost_info)
 
 if __name__ == '__main__':
-    params = {'guests_number': 20, 'minutes_number': 240}
+    params = {'guests_number': 20, 'minutes_number': 240, 'students_number': 20}
     function_name = 'get_service_cost'
     chosen_function = eval(function_name)
     functionResult = chosen_function(**params)
