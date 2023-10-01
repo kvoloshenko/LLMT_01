@@ -250,8 +250,6 @@ def answer_2(system, topic, message_content, function_answer, functionResult, te
     )
 
     answer = completion.choices[0].message.content
-    print (f'completion={completion}')
-
     line_for_file = '"' + topic + '";"' + answer + '"'
     append_to_file(line_for_file)
 
