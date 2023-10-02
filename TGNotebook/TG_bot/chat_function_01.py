@@ -29,7 +29,7 @@ function_descriptions = [
                 },
                 "students_number": {
                     "type": "integer",
-                    "description": "Number of students, e.g. 2",
+                    "description": "Number of students or schoolchildren or children over 5 years old, e.g. 2",
                 },
                 "minutes_number": {
                     "type": "integer",
