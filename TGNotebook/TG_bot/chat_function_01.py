@@ -1,4 +1,8 @@
 import json
+from datetime import datetime, timedelta, timezone
+
+USER_NAME = ''
+USER_ID = ''
 
 # Функция вычисления стоимости услуги
 def ServiceCost(guestsNumber: int,
@@ -38,8 +42,64 @@ function_descriptions = [
             },
             "required": ["guests_number", "minutes_number"],
         },
+    },
+    {
+        "name": "get_dish",
+        "description": "Get information about the dish, restaurant name, name of the dish, price of the dish and description of the dish",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "restaurant_name": {
+                    "type": "string",
+                    "description": "The Restaurant name, e.g. Allo BEIRUT",
+                },
+                "dish_name": {
+                    "type": "string",
+                    "description": "The dish, name, e.g. Juice Cocktail",
+                },
+                "dish_description": {
+                    "type": "string",
+                    "description": "The description of the dish, e.g. Guava, banana, strawberry, mango & milk",
+                },
+                "dish_price": {
+                    "type": "integer",
+                    "description": "The dish price, e.g. 120",
+                },
+                "placed_order": {
+                    "type": "string",
+                    "description": "The client placed an order, e.g. YES or NO",
+                },
+
+            },
+            "required": ["restaurant_name", "dish_name", "dish_price", "placed_order"],
+        },
     }
+
 ]
+
+def get_dish(restaurant_name, dish_name, dish_price, dish_description='', placed_order='NO'):
+    """Get information about the dish, restaurant name, name of the dish, price of the dish and description of the dish"""
+    print(f'placed_order={placed_order}')
+    # Output
+    get_dish_info = {
+        "user_name": USER_NAME,
+        "user_id": USER_ID,
+        "restaurant_name": restaurant_name,
+        "dish_name": dish_name,
+        "dish_price": dish_price,
+        "dish_description": dish_description
+    }
+    dish = json.dumps(get_dish_info)
+    if placed_order == 'YES':
+        # Get the current date and time
+        current_datetime = datetime.now(tz=timezone(timedelta(hours=3)))
+        # Format the date and time as a string
+        formatted_datetime = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+        orderfilename = "Logs/" + formatted_datetime + "_order.txt"
+        with open(orderfilename, 'w', encoding='utf-8') as file:
+            file.write(dish)
+
+    return dish
 
 def get_service_cost(guests_number, minutes_number, students_number=0):
     """Calculate the cost of a service for a given number of guests per number of minutes"""
@@ -61,4 +121,11 @@ if __name__ == '__main__':
     chosen_function = eval(function_name)
     functionResult = chosen_function(**params)
     print(functionResult)
+
+    params = {'restaurant_name': 'Allo BEIRUT', 'dish_name': 'Machbous Lamb', 'dish_price': 59, 'dish_description': ''}
+    function_name = 'get_dish'
+    chosen_function = eval(function_name)
+    functionResult = chosen_function(**params)
+    print(functionResult)
+
 

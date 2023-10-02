@@ -255,7 +255,11 @@ def answer_2(system, topic, message_content, function_answer, functionResult, te
 
     return answer, completion
 
-def answer_user_question(topic):
+def answer_user_question(topic, user_name='UserName', user_id='000000'):
+    cf.USER_ID = user_id
+    cf.USER_NAME = user_name
+    print(f'answer_user_question\ntopic={topic}\nuser_name={user_name}\nuser_id={user_id}')
+
     ans, completion = answer_function(system, topic, db)  # получите ответ модели
 
     return ans
@@ -268,7 +272,9 @@ if __name__ == '__main__':
     # topic = 'Привет! Ты кто?'
     # topic = 'Нас 20 человек, мы студенты, хотим прийти на четыре часа, посчитайте, плиз, сколько будет стоить?'
     # topic = 'Нас 20 человек, хотим прийти на четыре часа, посчитайте, плиз, сколько будет стоить?'
-    topic = 'Нас 20 школьников, хотим прийти на четыре часа, посчитайте, плиз, сколько будет стоить?'
+    # topic = 'Нас 20 школьников, хотим прийти на четыре часа, посчитайте, плиз, сколько будет стоить?'
+    topic = 'Я хочу заказать Machbous Lamb в ресторане Allo BEIRUT за 59 AED'
+    # topic = 'У кого есть Lamb'
     print(f'topic={topic}')
     response = do_test(topic)
     print(f'response={response}')

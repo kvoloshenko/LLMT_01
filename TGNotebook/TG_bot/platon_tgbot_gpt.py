@@ -76,8 +76,10 @@ async def text(update, context):
     # print(f'update: {update}')
     print(f'date: {update.message.date}')
     print(f'id message: {update.message.message_id}')
-    print(f'name: {update.message.from_user.first_name}')
-    print(f'user.id: {update.message.from_user.id}')
+    user_name = update.message.from_user.first_name
+    print(f'user_name: {user_name}')
+    user_id = update.message.from_user.id
+    print(f'user_id: {user_id}')
 
     topic = update.message.text
     topic_splited = split_text(topic, 40) # Разбиени строки переводом коретки
@@ -89,7 +91,7 @@ async def text(update, context):
     chat_type = update.message.chat.type
 
     if (QUESTION_FILTER == topic_first_n) or (chat_type == 'private'):
-        reply_text = chat_gpt.answer_user_question(topic)
+        reply_text = chat_gpt.answer_user_question(topic, user_name, user_id)
         response = TEXT_BEGINNING + '\n'
         response = response + reply_text + '\n' + TEXT_END
 
