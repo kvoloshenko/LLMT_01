@@ -211,6 +211,7 @@ def answer_function(system, topic, index_db, temp=TEMPERATURE):
 
     logging.info(f'{COMPLETION_S}{completion}{COMPLETION_E}')
     answer = completion.choices[0].message.content
+    print(f'1st call: finish_reason={completion.choices[0].finish_reason}')
 
     if completion.choices[0].finish_reason == "function_call":
         function_answer = completion.choices[0].message
@@ -246,8 +247,9 @@ def answer_2(system, topic, message_content, function_answer, functionResult, te
         messages=messages,
         temperature=temp,
         functions=cf.function_descriptions,   # Add function calling
-        # function_call="auto"               # specify the function call
+        function_call="none"                  # specify the function call
     )
+    print(f'2st call: finish_reason={completion.choices[0].finish_reason}')
 
     answer = completion.choices[0].message.content
     line_for_file = '"' + topic + '";"' + answer + '"'
@@ -273,8 +275,8 @@ if __name__ == '__main__':
     # topic = 'Нас 20 человек, мы студенты, хотим прийти на четыре часа, посчитайте, плиз, сколько будет стоить?'
     # topic = 'Нас 20 человек, хотим прийти на четыре часа, посчитайте, плиз, сколько будет стоить?'
     # topic = 'Нас 20 школьников, хотим прийти на четыре часа, посчитайте, плиз, сколько будет стоить?'
-    topic = 'Я хочу заказать Machbous Lamb в ресторане Allo BEIRUT за 59 AED'
-    # topic = 'У кого есть Lamb'
+    # topic = 'Я хочу заказать Machbous Lamb в ресторане Allo BEIRUT за 59 AED'
+    topic = 'У кого есть Lamb'
     print(f'topic={topic}')
     response = do_test(topic)
     print(f'response={response}')
