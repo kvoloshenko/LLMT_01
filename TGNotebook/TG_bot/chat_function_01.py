@@ -13,6 +13,7 @@ def ServiceCost(guestsNumber: int,
                 stop_check=750,
                 discountStudent=0.15 ) -> int:
     cost_students = costPerMinute * minutesNumber * studentsNumber * discountStudent
+    print(f'cost_students={cost_students}')
     cost_guest = (costPerMinute * minutesNumber * (guestsNumber-studentsNumber)) + cost_students
     print(f'cost_guest={cost_guest}')
     cost_stop = guestsNumber  * stop_check
