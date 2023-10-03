@@ -1,5 +1,6 @@
 import json
 from datetime import datetime, timedelta, timezone
+import requests
 
 USER_NAME = ''
 USER_ID = ''
@@ -73,8 +74,25 @@ function_descriptions = [
             },
             "required": ["restaurant_name", "dish_name", "dish_price", "placed_order"],
         },
+    },
+    {
+        "name": "get_full_menu",
+        "description": "Get the full menu for a given restaurant",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "restaurant_name": {
+                    "type": "string",
+                    "description": "The Restaurant name, e.g. Allo BEIRUT",
+                },
+                "menu_url": {
+                    "type": "string",
+                    "description": "Menu url for a given restaurant, e.g. 'http://www.all.com/file.pdf' ",
+                },
+            },
+            "required": ["restaurant_name", "menu_url"],
+        },
     }
-
 ]
 
 def get_dish(restaurant_name, dish_name, dish_price, dish_description='', placed_order='NO'):
@@ -115,17 +133,55 @@ def get_service_cost(guests_number, minutes_number, students_number=0):
 
     return json.dumps(service_cost_info)
 
+def download_file(url):
+    response = requests.get(url)
+
+    # Проверяем, что запрос прошел успешно
+    if response.status_code == 200:
+        # Открываем файл в режиме записи байтов
+        file_name="Logs/menu.pdf"
+        with open(file_name, "wb") as file:
+            # Записываем содержимое ответа в файл
+            file.write(response.content)
+        result = 'Файл успешно скачан'
+        print(result)
+    else:
+        result = 'Не удалось скачать файл. HTTP статус:' + response.status_code
+        print(result)
+    return result, file_name
+
+def get_full_menu(restaurant_name, menu_url):
+    """Get the full menu for a given restaurant"""
+    # Output
+    result, file_name = download_file(menu_url)
+    menu_info = {
+        "restaurant_name": restaurant_name,
+        "menu_url": menu_url,
+        "result": result,
+        "file_name": file_name
+    }
+    menu_info = json.dumps(menu_info)
+
+
+    return menu_info
+
 if __name__ == '__main__':
-    params = {'guests_number': 20, 'minutes_number': 240, 'students_number': 20}
-    function_name = 'get_service_cost'
+    # params = {'guests_number': 20, 'minutes_number': 240, 'students_number': 20}
+    # function_name = 'get_service_cost'
+    # chosen_function = eval(function_name)
+    # functionResult = chosen_function(**params)
+    # print(functionResult)
+
+    # params = {'restaurant_name': 'Allo BEIRUT', 'dish_name': 'Machbous Lamb', 'dish_price': 59, 'dish_description': ''}
+    # function_name = 'get_dish'
+    # chosen_function = eval(function_name)
+    # functionResult = chosen_function(**params)
+    # print(functionResult)
+
+    params = {'restaurant_name': 'Allo BEIRUT', 'menu_url': 'http://www.allobeirutstreetfood.com/wp-content/uploads/2023/07/Final-AB-menu-2023-MAR.pdf'}
+    function_name = 'get_full_menu'
     chosen_function = eval(function_name)
     functionResult = chosen_function(**params)
     print(functionResult)
-
-    params = {'restaurant_name': 'Allo BEIRUT', 'dish_name': 'Machbous Lamb', 'dish_price': 59, 'dish_description': ''}
-    function_name = 'get_dish'
-    chosen_function = eval(function_name)
-    functionResult = chosen_function(**params)
-    print(functionResult)
-
+    # download_file("http://www.allobeirutstreetfood.com/wp-content/uploads/2023/07/Final-AB-menu-2023-MAR.pdf")
 

@@ -276,10 +276,13 @@ if __name__ == '__main__':
     # topic = 'Нас 20 человек, хотим прийти на четыре часа, посчитайте, плиз, сколько будет стоить?'
     # topic = 'Нас 20 школьников, хотим прийти на четыре часа, посчитайте, плиз, сколько будет стоить?'
     # topic = 'Я хочу заказать Machbous Lamb в ресторане Allo BEIRUT за 59 AED'
-    topic = 'У кого есть Lamb'
+    # topic = 'У кого есть Lamb'
+    topic = 'Дай полное меню Allo BEIRUT'
     print(f'topic={topic}')
     response = do_test(topic)
     print(f'response={response}')
+
+
 
 
 
