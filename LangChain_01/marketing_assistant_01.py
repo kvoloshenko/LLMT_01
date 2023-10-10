@@ -113,3 +113,9 @@ if st.button('Generate') and user_input:
 # TO Run in cmd mode
 # cd venv/Scripts
 # streamlit run C:\_Proj\LLMT_01\LangChain_01\marketing_assistant_01.py
+
+# if __name__ == '__main__':
+#     user_input = '''У вас есть уникальная возможность провести незабываемые выходные с друзьями
+#     на мероприятии "Friends Tango Weekend 2023" в Нижнем Новгороде с 20 по 22 октября.'''
+#     app_data = marketing_automation_chain(user_input)
+#     print(f'app_data={app_data}')
