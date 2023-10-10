@@ -24,7 +24,7 @@ llm = OpenAI(model_name=LL_MODEL, temperature=TEMPERATURE)
 # Prompt Template
 blog_prompt_template = PromptTemplate(
     input_variables = ['product_description'],
-    template = 'Write a blog post on {product_description}'
+    template = 'Write a blog post on {product_description} Give the result in Russian'
 )
 
 # Chain
@@ -41,7 +41,7 @@ blog_chain = LLMChain(llm=llm, prompt=blog_prompt_template,
 youtube_script_template = PromptTemplate(
     input_variables=['blog'],
     template = '''Write an engaging Youtube short video script
-    for a new product based on this blog content: {blog}'''
+    for a new product based on this blog content: {blog} Give the result in Russian'''
 )
 
 # Chain 2
@@ -61,7 +61,7 @@ youtube_visuals_template = PromptTemplate(
     input_variables=['yt_script','blog'],
     template='''You're an amazing director, generate the scene by scene
     Description for the Youtube video based on the following script: {yt_script}
-    Here is additional blog content if additional context is needed: {blog}'''
+    Here is additional blog content if additional context is needed: {blog} Give the result in Russian'''
 )
 
 # Chain 3
