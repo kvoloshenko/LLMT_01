@@ -162,3 +162,5 @@ cython_debug/
 /TGNotebook/TG_bot/env
 /TGNotebook/TG_bot/Logs/
 /ChatGPT_Course_01/DB/faiss_index/
+/TGNotebook/TG_bot/AutoedemKnowledgeBase_01.txt
+/TGNotebook/TG_bot/AutoedemPrompt_01.txt

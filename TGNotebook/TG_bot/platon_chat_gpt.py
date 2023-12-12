@@ -12,6 +12,7 @@ import logging
 from datetime import datetime, timedelta, timezone
 import tiktoken
 import chat_function_01 as cf
+import tools_01 as tls
 
 # XML теги для лога
 LOG_S = '<log>'
@@ -51,6 +52,15 @@ API_KEY = os.environ.get("API_KEY")
 os.environ["OPENAI_API_KEY"] = API_KEY
 openai.api_key = API_KEY
 
+DATA_FILES = os.environ.get("DATA_FILES")
+print (f'DATA_FILES = {DATA_FILES}')
+
+if DATA_FILES == 'local':
+    SYSTEM_DOC_LOCAL = os.environ.get("SYSTEM_DOC_LOCAL")
+    print(f'SYSTEM_DOC_LOCAL={SYSTEM_DOC_LOCAL}')
+    KNOWLEDGE_BASE_LOCAL = os.environ.get("KNOWLEDGE_BASE_LOCAL")
+    print(f'KNOWLEDGE_BASE_LOCAL={KNOWLEDGE_BASE_LOCAL}')
+
 logging.info(LOG_S)
 LL_MODEL = os.environ.get("LL_MODEL") # модель
 logging.info(f'LL_MODEL = {LL_MODEL}')
@@ -75,53 +85,24 @@ KNOWLEDGE_BASE_URL = os.environ.get("KNOWLEDGE_BASE_URL") # база знани�
 print(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
-# Функции для работы с файлом
-def write_to_file(file_data, file_name=csvfilename):
-    with open(file_name, 'w', encoding='utf-8') as file:
-        file.write(file_data)
 
 # Записывам в файл заголовок
-write_to_file('question;answer')
-
-def append_to_file(new_line, file_name=csvfilename):
-    with open(file_name, 'a', encoding='utf-8') as file:
-        file.write('\n' + new_line)
-
-def load_document_text(url: str) -> str:
-    # Extract the document ID from the URL
-    match_ = re.search('/document/d/([a-zA-Z0-9-_]+)', url)
-    if match_ is None:
-        raise ValueError('Invalid Google Docs URL')
-    doc_id = match_.group(1)
-    # print (f'doc_id={doc_id}')
-    text = ''
-
-    try:
-        # Download the document as plain text
-        response = requests.get(f'https://docs.google.com/document/d/{doc_id}/export?format=txt')
-        response.raise_for_status()
-        if 'text/plain' in response.headers['Content-Type']:
-            # print('Правильный доступ!')
-            text = response.text
-        else:
-            raise ValueError('Invalid Google Docs URL')
-            print('Нет доступа к документу анонимным пользователям')
-            logging.error(f'!!! No access to the document by anonymous users !!!')
-
-    except Exception as e:  # обработка ошибок requests.exceptions.HTTPError: 404 Client Error: Not Found for url
-        print(f'!!! load_document_text error: {str(e)}')
-        logging.error(f'!!! load_document_text error: {str(e)}')
-
-    return text
+tls.write_to_file('question;answer', csvfilename)
 
 # Инструкция для GPT, которая будет подаваться в system
-system = load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
+if DATA_FILES == 'local':
+    system = tls.load_text(SYSTEM_DOC_LOCAL)
+else:
+    system = tls.load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
 logging.info(f'{PROMPT_S}{system}{PROMPT_E}')
 
 # Функция создания индексной базы знаний
 def create_index_db():
     # База знаний, которая будет подаваться в LangChain
-    database = load_document_text(KNOWLEDGE_BASE_URL)  # Загрузка файла с Базой Знаний
+    if DATA_FILES == 'local':
+        database = tls.load_text(KNOWLEDGE_BASE_LOCAL)
+    else:
+        database = tls.load_document_text(KNOWLEDGE_BASE_URL)  # Загрузка файла с Базой Знаний
     logging.info(f'{KNOWLEDGE_DB_S}{database}{KNOWLEDGE_DB_E}')
 
     source_chunks = []
@@ -230,7 +211,7 @@ def answer_function(system, topic, index_db, temp=TEMPERATURE):
     else:
         print(f'Функции не было')
         line_for_file = '"' + topic + '";"' + answer + '"'
-        append_to_file(line_for_file)
+        tls.append_to_file(line_for_file, csvfilename)
 
     return answer, completion  # возвращает ответ
 
@@ -255,7 +236,7 @@ def answer_2(system, topic, message_content, function_answer, functionResult, te
 
     answer = completion.choices[0].message.content
     line_for_file = '"' + topic + '";"' + answer + '"'
-    append_to_file(line_for_file)
+    tls.append_to_file(line_for_file, csvfilename)
 
     return answer, completion
 
@@ -274,7 +255,6 @@ def do_test(topic):
 
 if __name__ == '__main__':
     topic = 'Привет! Ты кто?'
-    topic = 'Дай полное меню Allo BEIRUT'
     print(f'topic={topic}')
     response = do_test(topic)
     print(f'response={response}')

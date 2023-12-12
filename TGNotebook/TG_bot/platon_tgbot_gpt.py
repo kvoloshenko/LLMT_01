@@ -35,6 +35,9 @@ TOKEN = os.environ.get("TOKEN")
 TEXT_BEGINNING = os.environ.get("TEXT_BEGINNING")
 logging.info(f'TEXT_BEGINNING = {TEXT_BEGINNING}')
 
+BOT_START_REPLY = os.environ.get("BOT_START_REPLY")
+print(f'BOT_START_REPLY={BOT_START_REPLY}')
+
 TEXT_END = os.environ.get("TEXT_END")
 logging.info (f'TEXT_END = {TEXT_END}')
 
@@ -62,7 +65,7 @@ def split_text(text, max_length): # функция разбиения сроки
 
 # функция команды /start
 async def start(update, context):
-  await update.message.reply_text('Приветствую в сети Авторай! Я - Автораиса, Ваш виртуальный консультант. Чем могу помочь?')
+  await update.message.reply_text(BOT_START_REPLY)
 
 # функция для текстовых сообщений
 async def text(update, context):
