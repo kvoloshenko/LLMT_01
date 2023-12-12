@@ -4,6 +4,7 @@ import time
 import os
 import platon_chat_gpt as chat_gpt
 import logging
+import tools_01 as tls
 
 # XML теги для лога
 LOG_S = '<log>'
@@ -46,22 +47,7 @@ if QUESTION_FILTER is None:
     QUESTION_FILTER = ""
 
 
-def split_text(text, max_length): # функция разбиения сроки на части переводом коретки
-    words = text.split()  # Разделяем строку на слова
-    result = []  # Список для результата
 
-    current_line = ""  # Текущая строка
-    for word in words:
-        if len(current_line) + len(word) <= max_length:  # Если добавление слова не превышает максимальную длину
-            current_line += word + " "  # Добавляем слово и пробел к текущей строке
-        else:
-            result.append(current_line.strip())  # Добавляем текущую строку в результат без лишних пробелов
-            current_line = word + " "  # Начинаем новую строку с текущим словом
-
-    if current_line:  # Если осталась незавершенная строка
-        result.append(current_line.strip())  # Добавляем незавершенную строку в результат
-
-    return '\n'.join(result)  # Возвращаем результат, объединяя строки символом перевода строки
 
 # функция команды /start
 async def start(update, context):
@@ -85,7 +71,7 @@ async def text(update, context):
     print(f'user_id: {user_id}')
 
     topic = update.message.text
-    topic_splited = split_text(topic, 40) # Разбиени строки переводом коретки
+    topic_splited = tls.split_text(topic, 40) # Разбиени строки переводом коретки
     print(f'text: {topic_splited}')
 
     question_filter_len = len (QUESTION_FILTER)
@@ -99,7 +85,7 @@ async def text(update, context):
         response = response + reply_text + '\n' + TEXT_END
 
         await update.message.reply_text(f'{response}')
-        reply_text_splited = split_text(reply_text, 40) # Разбиени строки переводом коретки
+        reply_text_splited = tls.split_text(reply_text, 40) # Разбиени строки переводом коретки
         logging.info(f'{REPLY_TEXT_S}{reply_text_splited}{REPLY_TEXT_E}')
         print(f'reply_text:\n{reply_text_splited}')
         print('-------------------')

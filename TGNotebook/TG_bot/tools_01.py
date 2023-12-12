@@ -69,6 +69,24 @@ def append_to_file(new_line, file_name):
     with open(file_name, 'a', encoding='utf-8') as file:
         file.write('\n' + new_line)
 
+def split_text(text, max_length): # функция разбиения сроки на части переводом коретки
+    words = text.split()  # Разделяем строку на слова
+    result = []  # Список для результата
+
+    current_line = ""  # Текущая строка
+    for word in words:
+        if len(current_line) + len(word) <= max_length:  # Если добавление слова не превышает максимальную длину
+            current_line += word + " "  # Добавляем слово и пробел к текущей строке
+        else:
+            result.append(current_line.strip())  # Добавляем текущую строку в результат без лишних пробелов
+            current_line = word + " "  # Начинаем новую строку с текущим словом
+
+    if current_line:  # Если осталась незавершенная строка
+        result.append(current_line.strip())  # Добавляем незавершенную строку в результат
+
+    return '\n'.join(result)  # Возвращаем результат, объединяя строки символом перевода строки
+
+
 if __name__ == '__main__':
     SYSTEM_DOC_URL = 'https://docs.google.com/document/d/1wCls61lqFOj3CSRfKbjeOjwfD78NkDt7/edit?usp=sharing&ouid=104673724125492337414&rtpof=true&sd=true'
     new_url = get_google_url(SYSTEM_DOC_URL)
