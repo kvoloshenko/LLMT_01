@@ -1,7 +1,5 @@
 import re
-import requests
 import os
-import json
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.docstore.document import Document
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -10,8 +8,6 @@ import openai
 from dotenv import load_dotenv
 import logging
 from datetime import datetime, timedelta, timezone
-import tiktoken
-import chat_function_01 as cf
 import tools_01 as tls
 
 # XML теги для лога
@@ -147,29 +143,8 @@ def create_index_db():
 
 PROMPT, KNOWLEDGE_BASE = reload_data()
 
-def num_tokens_from_messages(messages, model):
-    """Возвращает количество токенов, используемых списком сообщений."""
-    try:
-        encoding = tiktoken.encoding_for_model(model) # Пытаемся получить кодировку для выбранной модели
-    except KeyError:
-        encoding = tiktoken.get_encoding("cl100k_base") # если не получается, используем кодировку "cl100k_base"
-    if model == "gpt-3.5-turbo-0301" or "gpt-3.5-turbo-0613" or "gpt-3.5-turbo-16k" or "gpt-3.5-turbo":
-        num_tokens = 0 # начальное значение счетчика токенов
-        for message in messages: # Проходимся по каждому сообщению в списке сообщений
-            num_tokens += 4  # каждое сообщение следует за <im_start>{role/name}\n{content}<im_end>\n, что равно 4 токенам
-            for key, value in message.items(): # итерация по элементам сообщения (роль, имя, контент)
-                num_tokens += len(encoding.encode(value)) # подсчет токенов в каждом элементе
-                if key == "name":  # если присутствует имя, роль опускается
-                    num_tokens += -1  # роль всегда требуется и всегда занимает 1 токен, так что мы вычитаем его, если имя присутствует
-        num_tokens += 2  # каждый ответ начинается с <im_start>assistant, что добавляет еще 2 токена
-        return num_tokens # возвращаем общее количество токенов
-    else:
-      # Если выбранная модель не поддерживается, генерируем исключение
-        raise NotImplementedError(f"""num_tokens_from_messages() is not presently implemented for model {model}. # вызываем ошибку, если функция не реализована для конкретной модели""")
-
-
-# Запрос в ChatGPT с использованием функций
-def answer_function(topic, user_id, user_name):
+# Запрос в ChatGPT
+def get_answer(topic, user_id, user_name):
 
     # Поиск релевантных отрезков из базы знаний
     docs = KNOWLEDGE_BASE.similarity_search(topic, k = NUMBER_RELEVANT_CHUNKS)
@@ -183,7 +158,7 @@ def answer_function(topic, user_id, user_name):
     ]
 
     logging.info(f'{MESSAGES_S}{messages}{MESSAGES_E}')
-    num_tokens = num_tokens_from_messages(messages, LL_MODEL)
+    num_tokens = tls.num_tokens_from_messages(messages, LL_MODEL)
     logging.info(f'{NUM_TOKENS_S}{num_tokens}{NUM_TOKENS_E}')
     print(f'num_tokens = {num_tokens}')
 
@@ -205,7 +180,7 @@ def answer_function(topic, user_id, user_name):
     return answer, completion  # возвращает ответ
 
 def answer_user_question(topic, user_name='UserName', user_id='000000'):
-    ans, completion = answer_function(topic, user_id, user_name)  # получите ответ модели
+    ans, completion = get_answer(topic, user_id, user_name)  # получите ответ модели
     print(f'ans={ans}')
 
     return ans

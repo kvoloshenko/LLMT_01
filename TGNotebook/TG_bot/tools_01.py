@@ -4,6 +4,7 @@ import codecs
 import sys
 import urllib.request
 from bs4 import BeautifulSoup
+import tiktoken
 
 def get_google_url(url: str) -> str:
     # Extract the document ID from the URL
@@ -85,6 +86,26 @@ def split_text(text, max_length): # функция разбиения сроки
         result.append(current_line.strip())  # Добавляем незавершенную строку в результат
 
     return '\n'.join(result)  # Возвращаем результат, объединяя строки символом перевода строки
+
+def num_tokens_from_messages(messages, model):
+    """Возвращает количество токенов, используемых списком сообщений."""
+    try:
+        encoding = tiktoken.encoding_for_model(model) # Пытаемся получить кодировку для выбранной модели
+    except KeyError:
+        encoding = tiktoken.get_encoding("cl100k_base") # если не получается, используем кодировку "cl100k_base"
+    if model == "gpt-3.5-turbo-0301" or "gpt-3.5-turbo-0613" or "gpt-3.5-turbo-16k" or "gpt-3.5-turbo":
+        num_tokens = 0 # начальное значение счетчика токенов
+        for message in messages: # Проходимся по каждому сообщению в списке сообщений
+            num_tokens += 4  # каждое сообщение следует за <im_start>{role/name}\n{content}<im_end>\n, что равно 4 токенам
+            for key, value in message.items(): # итерация по элементам сообщения (роль, имя, контент)
+                num_tokens += len(encoding.encode(value)) # подсчет токенов в каждом элементе
+                if key == "name":  # если присутствует имя, роль опускается
+                    num_tokens += -1  # роль всегда требуется и всегда занимает 1 токен, так что мы вычитаем его, если имя присутствует
+        num_tokens += 2  # каждый ответ начинается с <im_start>assistant, что добавляет еще 2 токена
+        return num_tokens # возвращаем общее количество токенов
+    else:
+      # Если выбранная модель не поддерживается, генерируем исключение
+        raise NotImplementedError(f"""num_tokens_from_messages() is not presently implemented for model {model}. # вызываем ошибку, если функция не реализована для конкретной модели""")
 
 
 if __name__ == '__main__':
