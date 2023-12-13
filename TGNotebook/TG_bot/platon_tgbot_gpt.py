@@ -80,15 +80,20 @@ async def text(update, context):
     chat_type = update.message.chat.type
 
     if (QUESTION_FILTER == topic_first_n) or (chat_type == 'private'):
-        reply_text = chat_gpt.answer_user_question(topic, user_name, user_id)
-        response = TEXT_BEGINNING + '\n'
-        response = response + reply_text + '\n' + TEXT_END
+        if topic=='##reload##':
+            # обновление промта и базы знаний
+            chat_gpt.PROMPT, chat_gpt.KNOWLEDGE_BASE = chat_gpt.reload_data()
+            await update.message.reply_text(f'Данные обновлены!')
+        else:
+            reply_text = chat_gpt.answer_user_question(topic, user_name, str(user_id))
+            response = TEXT_BEGINNING + '\n'
+            response = response + reply_text + '\n' + TEXT_END
 
-        await update.message.reply_text(f'{response}')
-        reply_text_splited = tls.split_text(reply_text, 40) # Разбиени строки переводом коретки
-        logging.info(f'{REPLY_TEXT_S}{reply_text_splited}{REPLY_TEXT_E}')
-        print(f'reply_text:\n{reply_text_splited}')
-        print('-------------------')
+            await update.message.reply_text(f'{response}')
+            reply_text_splited = tls.split_text(reply_text, 40) # Разбиени строки переводом коретки
+            logging.info(f'{REPLY_TEXT_S}{reply_text_splited}{REPLY_TEXT_E}')
+            print(f'reply_text:\n{reply_text_splited}')
+            print('-------------------')
 
 
 def main():

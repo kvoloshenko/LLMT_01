@@ -87,14 +87,20 @@ logging.info(f'KNOWLEDGE_BASE_URL = {KNOWLEDGE_BASE_URL}')
 
 
 # Записывам в файл заголовок
-tls.write_to_file('question;answer', csvfilename)
+tls.write_to_file('user_id;user_name;question;answer', csvfilename)
 
-# Инструкция для GPT, которая будет подаваться в system
-if DATA_FILES == 'local':
-    system = tls.load_text(SYSTEM_DOC_LOCAL)
-else:
-    system = tls.load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
-logging.info(f'{PROMPT_S}{system}{PROMPT_E}')
+def reload_data():
+    print('reload_data')
+    # Инструкция для GPT, которая будет подаваться в system
+    if DATA_FILES == 'local':
+        system = tls.load_text(SYSTEM_DOC_LOCAL)
+    else:
+        system = tls.load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
+    logging.info(f'{PROMPT_S}{system}{PROMPT_E}')
+
+    db = create_index_db()
+
+    return system, db
 
 # Функция создания индексной базы знаний
 def create_index_db():
@@ -135,8 +141,8 @@ def create_index_db():
 
     return db
 
-db = create_index_db()
 
+PROMPT, KNOWLEDGE_BASE = reload_data()
 
 def num_tokens_from_messages(messages, model):
     """Возвращает количество токенов, используемых списком сообщений."""
@@ -160,7 +166,7 @@ def num_tokens_from_messages(messages, model):
 
 
 # Запрос в ChatGPT с использованием функций
-def answer_function(system, topic, index_db, temp=TEMPERATURE):
+def answer_function(topic, user_id, user_name, system=PROMPT, index_db=KNOWLEDGE_BASE, temp=TEMPERATURE):
 
     # Поиск релевантных отрезков из базы знаний
     docs = index_db.similarity_search(topic, k = NUMBER_RELEVANT_CHUNKS)
@@ -183,10 +189,6 @@ def answer_function(system, topic, index_db, temp=TEMPERATURE):
             model=LL_MODEL,
             messages=messages,
             temperature=temp
-            # TODO функции пока не используем
-            # ,
-            # functions=cf.function_descriptions,   # Add function calling
-            # function_call="auto"                  # specify the function call
         )
     except Exception as e:  # обработка ошибок openai.error.RateLimitError
         print(f'!!! External error: {str(e)}')
@@ -194,69 +196,22 @@ def answer_function(system, topic, index_db, temp=TEMPERATURE):
 
     logging.info(f'{COMPLETION_S}{completion}{COMPLETION_E}')
     answer = completion.choices[0].message.content
-    print(f'1st call: finish_reason={completion.choices[0].finish_reason}')
-
-    if completion.choices[0].finish_reason == "function_call":
-        function_answer = completion.choices[0].message
-        print(f'Сработала функция {function_answer.function_call.name} - нужно извлекать значения параметров функции')
-        # Извлекаем параметры функции
-        params = json.loads(function_answer.function_call.arguments)
-        print(f'params={params}')
-        # Используем вывод LLM для ручного вызова функции.
-        function_name = 'cf.'+function_answer.function_call.name
-        chosen_function = eval(function_name)
-        functionResult = chosen_function(**params)
-        print(functionResult)
-        answer, completion = answer_2(system, topic, message_content, function_answer, functionResult)
-    else:
-        print(f'Функции не было')
-        line_for_file = '"' + topic + '";"' + answer + '"'
-        tls.append_to_file(line_for_file, csvfilename)
+    line_for_file = '"' + user_id + '";"' + user_name + '";"' + topic + '";"' + answer + '"'
+    tls.append_to_file(line_for_file, csvfilename)
 
     return answer, completion  # возвращает ответ
 
-# Второй вызов ChatGPT для обработки результатов выполнения функции
-def answer_2(system, topic, message_content, function_answer, functionResult, temp=TEMPERATURE):
-
-
-    messages = [
-        {"role": "system", "content": system},
-        {"role": "user", "content": f"Here is the document with information to respond to the client: {message_content}\n\n Here is the client's question: \n{topic}"},
-        {"role": "function", "name": function_answer.function_call.name, "content": functionResult}
-    ]
-
-    completion = openai.ChatCompletion.create(
-        model=LL_MODEL,
-        messages=messages,
-        temperature=temp,
-        functions=cf.function_descriptions,   # Add function calling
-        function_call="none"                  # specify the function call
-    )
-    print(f'2st call: finish_reason={completion.choices[0].finish_reason}')
-
-    answer = completion.choices[0].message.content
-    line_for_file = '"' + topic + '";"' + answer + '"'
-    tls.append_to_file(line_for_file, csvfilename)
-
-    return answer, completion
-
 def answer_user_question(topic, user_name='UserName', user_id='000000'):
-    cf.USER_ID = user_id
-    cf.USER_NAME = user_name
-    print(f'answer_user_question\ntopic={topic}\nuser_name={user_name}\nuser_id={user_id}')
-
-    ans, completion = answer_function(system, topic, db)  # получите ответ модели
+    ans, completion = answer_function(topic, user_id, user_name)  # получите ответ модели
+    print(f'ans={ans}')
 
     return ans
 
-def do_test(topic):
-    ans = answer_user_question(topic)
-    return ans
 
 if __name__ == '__main__':
     topic = 'Привет! Ты кто?'
     print(f'topic={topic}')
-    response = do_test(topic)
+    response = answer_user_question(topic)
     print(f'response={response}')
 
 
