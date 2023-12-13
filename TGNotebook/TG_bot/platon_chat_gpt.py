@@ -52,6 +52,9 @@ API_KEY = os.environ.get("API_KEY")
 os.environ["OPENAI_API_KEY"] = API_KEY
 openai.api_key = API_KEY
 
+PROMPT = None
+KNOWLEDGE_BASE = None
+
 DATA_FILES = os.environ.get("DATA_FILES")
 print (f'DATA_FILES = {DATA_FILES}')
 
@@ -93,14 +96,14 @@ def reload_data():
     print('reload_data')
     # Инструкция для GPT, которая будет подаваться в system
     if DATA_FILES == 'local':
-        system = tls.load_text(SYSTEM_DOC_LOCAL)
+        prompt = tls.load_text(SYSTEM_DOC_LOCAL)
     else:
-        system = tls.load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
-    logging.info(f'{PROMPT_S}{system}{PROMPT_E}')
+        prompt = tls.load_document_text(SYSTEM_DOC_URL)  # Загрузка файла с Промтом
+    logging.info(f'{PROMPT_S}{prompt}{PROMPT_E}')
 
-    db = create_index_db()
+    knowledge_base = create_index_db()
+    return prompt, knowledge_base
 
-    return system, db
 
 # Функция создания индексной базы знаний
 def create_index_db():
@@ -166,16 +169,16 @@ def num_tokens_from_messages(messages, model):
 
 
 # Запрос в ChatGPT с использованием функций
-def answer_function(topic, user_id, user_name, system=PROMPT, index_db=KNOWLEDGE_BASE, temp=TEMPERATURE):
+def answer_function(topic, user_id, user_name):
 
     # Поиск релевантных отрезков из базы знаний
-    docs = index_db.similarity_search(topic, k = NUMBER_RELEVANT_CHUNKS)
+    docs = KNOWLEDGE_BASE.similarity_search(topic, k = NUMBER_RELEVANT_CHUNKS)
 
     message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\n#### Document excerpt №{i+1}####\n' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
     logging.info(f'{MESSAGE_CONTENT_S}{message_content}{MESSAGE_CONTENT_E}')
 
     messages = [
-        {"role": "system", "content": system},
+        {"role": "system", "content": PROMPT},
         {"role": "user", "content": f"Here is the document with information to respond to the client: {message_content}\n\n Here is the client's question: \n{topic}"}
     ]
 
@@ -188,7 +191,7 @@ def answer_function(topic, user_id, user_name, system=PROMPT, index_db=KNOWLEDGE
         completion = openai.ChatCompletion.create(
             model=LL_MODEL,
             messages=messages,
-            temperature=temp
+            temperature=TEMPERATURE
         )
     except Exception as e:  # обработка ошибок openai.error.RateLimitError
         print(f'!!! External error: {str(e)}')

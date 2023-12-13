@@ -39,6 +39,8 @@ logging.info(f'TEXT_BEGINNING = {TEXT_BEGINNING}')
 BOT_START_REPLY = os.environ.get("BOT_START_REPLY")
 print(f'BOT_START_REPLY={BOT_START_REPLY}')
 
+print('Команда для обновления данных: ##reload##')
+
 TEXT_END = os.environ.get("TEXT_END")
 logging.info (f'TEXT_END = {TEXT_END}')
 
