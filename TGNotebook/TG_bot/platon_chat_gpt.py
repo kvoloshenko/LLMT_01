@@ -120,37 +120,45 @@ def create_index_db():
     print(f'chunk_num={chunk_num}')
     logging.info(f'{CHUNK_NUM_S}{chunk_num}{CHUNK_NUM_E}')
 
-    # Инициализирум модель эмбеддингов
-    embeddings = OpenAIEmbeddings()
+    db = None
 
     try:
-        db = FAISS.from_documents(source_chunks, embeddings) # Создадим индексную базу из разделенных фрагментов текста
-    except Exception as e: # обработка ошибок openai.error.RateLimitError
-        print(f'!!! External error: {str(e)}')
-        logging.error(f'!!! External error: {str(e)}')
+        # Инициализирум модель эмбеддингов
+        embeddings = OpenAIEmbeddings()
 
-    for chunk in source_chunks:  # Поиск слишком больших чанков
-        if len(chunk.page_content) > CHUNK_SIZE:
-            logging.warning(f'*** Слишком большой кусок! ***')
-            logging.warning(f'chunk_len ={len(chunk.page_content)}')
-            logging.warning(f'content ={chunk.page_content}')
-            print(f'*** Слишком большой кусок! ***')
-            print(f'chunk_len ={len(chunk.page_content)}')
-            print(f'content ={chunk.page_content}')
+        db = FAISS.from_documents(source_chunks, embeddings) # Создадим индексную базу из разделенных фрагментов текста
+
+        for chunk in source_chunks:  # Поиск слишком больших чанков
+            if len(chunk.page_content) > CHUNK_SIZE:
+                logging.warning(f'*** Слишком большой кусок! ***')
+                logging.warning(f'chunk_len ={len(chunk.page_content)}')
+                logging.warning(f'content ={chunk.page_content}')
+                print(f'*** Слишком большой кусок! ***')
+                print(f'chunk_len ={len(chunk.page_content)}')
+                print(f'content ={chunk.page_content}')
+    except Exception as e: # обработка ошибок openai.error.RateLimitError
+        print(f'!!! Индексная база не создалась: External error: {str(e)}')
+        logging.error(f'!!! Индексная база не создалась: External error: {str(e)}')
+
+
 
     return db
 
 
 PROMPT, KNOWLEDGE_BASE = reload_data()
 
-# Запрос в ChatGPT
-def get_answer(topic, user_id, user_name):
-
-    # Поиск релевантных отрезков из базы знаний
+# Поиск релевантных отрезков из базы знаний
+def get_message_content(topic):
     docs = KNOWLEDGE_BASE.similarity_search(topic, k = NUMBER_RELEVANT_CHUNKS)
-
     message_content = re.sub(r'\n{2}', ' ', '\n '.join([f'\n#### Document excerpt №{i+1}####\n' + doc.page_content + '\n' for i, doc in enumerate(docs)]))
     logging.info(f'{MESSAGE_CONTENT_S}{message_content}{MESSAGE_CONTENT_E}')
+    return message_content
+
+# Запрос в ChatGPT
+def get_answer(topic, user_id, user_name):
+    answer = 'Модель не отвечает!'
+    completion = None
+    message_content = get_message_content(topic) # Поиск релевантных отрезков из базы знаний
 
     messages = [
         {"role": "system", "content": PROMPT},
@@ -168,12 +176,13 @@ def get_answer(topic, user_id, user_name):
             messages=messages,
             temperature=TEMPERATURE
         )
+        logging.info(f'{COMPLETION_S}{completion}{COMPLETION_E}')
+        answer = completion.choices[0].message.content
     except Exception as e:  # обработка ошибок openai.error.RateLimitError
         print(f'!!! External error: {str(e)}')
         logging.error(f'!!! External error: {str(e)}')
 
-    logging.info(f'{COMPLETION_S}{completion}{COMPLETION_E}')
-    answer = completion.choices[0].message.content
+
     line_for_file = '"' + user_id + '";"' + user_name + '";"' + topic + '";"' + answer + '"'
     tls.append_to_file(line_for_file, csvfilename)
 
@@ -181,8 +190,6 @@ def get_answer(topic, user_id, user_name):
 
 def answer_user_question(topic, user_name='UserName', user_id='000000'):
     ans, completion = get_answer(topic, user_id, user_name)  # получите ответ модели
-    print(f'ans={ans}')
-
     return ans
 
 
