@@ -9,13 +9,13 @@ import tiktoken
 def get_google_url(url: str) -> str:
     # Extract the document ID from the URL
     match_ = re.search('/document/d/([a-zA-Z0-9-_]+)', url)
-    print (f'math_={match_}')
+    # print (f'math_={match_}')
     if match_ is None:
         raise ValueError('Invalid Google Docs URL')
     doc_id = match_.group(1)
-    print (f'doc_id={doc_id}')
+    # print (f'doc_id={doc_id}')
     new_url = 'https://docs.google.com/document/d/' + doc_id + '/export?format=txt'
-    print(f'new_url={new_url}')
+    # print(f'new_url={new_url}')
     return new_url
 
 
